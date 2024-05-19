@@ -1,0 +1,1 @@
+1. Open a terminal and execute the ff. command: `docker-compose up -d`. This command will build and run a Docker container described by `docker-compose.yaml`, in the background (`-d` flag). 

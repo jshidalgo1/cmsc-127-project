@@ -1,9 +1,7 @@
-import {getAllRooms} from "../Controllers/controllers.js";
+import { addUser } from "../Controllers/controllers.js";
 
 const setUpRoutes = (app) => {
-    // app.<METHOD>("/<ROUTE>", <FUNCTION>)
-
-    
+    app.post("/signup", addUser);
 }
 
 export default setUpRoutes;
