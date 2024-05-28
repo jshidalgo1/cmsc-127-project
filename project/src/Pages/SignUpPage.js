@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const SignUpPage = () => {
     // Implement the form for updating user details here
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submission here
-    };
+    const formRef = useRef();
+   const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    axios.post('http://localhost:3001/addUser', data) 
+    .then(response => {
+        console.log('Success:', response.data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+    formRef.current.reset();
+};
 
     return (
         <div>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+            <form ref={formRef} onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
                 <label>
                     First Name:
                     <input type="text" name="firstName" required />

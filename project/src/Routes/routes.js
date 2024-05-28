@@ -1,7 +1,7 @@
 import { addUser } from "../Controllers/controllers.js";
 
 const setUpRoutes = (app) => {
-    app.post("/signup", addUser);
+    app.post("/addUser", addUser);
 }
 
 export default setUpRoutes;
