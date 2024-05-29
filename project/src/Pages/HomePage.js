@@ -15,7 +15,7 @@ const HomePage = () => {
                     <input type="password" name="password" />
                 </label>
                 <br />
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Login" />
             </form>
             <Link to="/signup">
                 <button>Sign Up</button>
