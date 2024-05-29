@@ -25,6 +25,7 @@ function Navbar(user) {
             >Profile
             </Link>
           </li>
+          <li><Link to="/tables">Tables</Link></li>
           <li><Link to="/"><span style={{ cursor: 'pointer' }} >Logout</span></Link></li> {/* TODO: add logout feature*/}
         </ul>
       </nav>

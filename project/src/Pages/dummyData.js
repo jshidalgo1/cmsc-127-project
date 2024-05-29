@@ -44,15 +44,15 @@ export const USER_REVIEWS_FOOD_ESTABLISHMENT = [
     {
         "Username": "john_doe",
         "Establishment_id": 1,
-        "review": "Great food and atmosphere!",
         "Review_date_time": "2024-05-28T18:30:00",
+        "review": "Great food and atmosphere!",
         "Rating": 4.5
     },
     {
         "Username": "jane_smith",
         "Establishment_id": 2,
-        "review": "Excellent service and tasty pizzas!",
         "Review_date_time": "2024-05-29T12:45:00",
+        "review": "Excellent service and tasty pizzas!",
         "Rating": 5
     }
 ];
@@ -118,22 +118,22 @@ export const USER_REVIEWS_FOOD_ITEM = [
     {
         "Username": "john_doe",
         "Item_id": 1,
-        "review": "Delicious pasta!",
         "Review_date_time": "2024-05-28T19:00:00",
+        "review": "Delicious pasta!",
         "Rating": 4
     },
     {
         "Username": "jane_smith",
         "Item_id": 2,
-        "review": "Best pizza ever!",
         "Review_date_time": "2024-05-29T13:00:00",
+        "review": "Best pizza ever!",
         "Rating": 5
     },
     {
         "Username": "jane_smith",
         "Item_id": 1,
-        "review": "Best pizza ever!",
         "Review_date_time": "2024-05-29T13:00:00",
+        "review": "Best pizza ever!",
         "Rating": 5
     }
 ];

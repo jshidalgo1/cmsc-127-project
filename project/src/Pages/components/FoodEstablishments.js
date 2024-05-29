@@ -3,7 +3,7 @@ import { FoodEstablishmentLinks, FoodEstablishmentContactNo } from "./FoodEstabl
 import { FOOD_ESTABLISHMENT_links, FOOD_ESTABLISHMENT_CONTACT_NO } from "../dummyData.js";
 import "../styles/FoodEstablishmentsTable.css";
 
-const FoodEstablishmentsTable = ({ data }) => {
+const FoodEstablishments = ({ data }) => {
     return (
         <div className="food-establishments-table">
             {data.length > 0 ? (
@@ -48,4 +48,4 @@ const FoodEstablishmentsTable = ({ data }) => {
     );
 };
 
-export default FoodEstablishmentsTable;
+export default FoodEstablishments;

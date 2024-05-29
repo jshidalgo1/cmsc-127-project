@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar.js";
-import FoodEstablishmentsTable from "./components/FoodEstablishmentsTable.js";
+import FoodEstablishments from "./components/FoodEstablishments.js";
 import { FOOD_ESTABLISHMENT } from "./dummyData.js"; // Import FOOD_ESTABLISHMENT array
 
 function FoodEstablishmentsPage() {
@@ -19,7 +19,7 @@ function FoodEstablishmentsPage() {
         </div>
 
         <h2>Food Establishment Table</h2>
-        <FoodEstablishmentsTable data={FOOD_ESTABLISHMENT} /> {/* Pass FOOD_ESTABLISHMENT data here */}
+        <FoodEstablishments data={FOOD_ESTABLISHMENT} /> {/* Pass FOOD_ESTABLISHMENT data here */}
 
       </div>
 
