@@ -1,9 +1,9 @@
-import mariadb from 'mariadb'; 
+import mariadb from 'mariadb';
 
 const pool = mariadb.createPool({
-    host: 'localhost', 
-    user:'root', 
-    password: 'Napoli07!',
+    host: 'localhost',
+    user: 'root',
+    password: 'Napoli07!', // TODO: change password of local mariadb
     connectionLimit: 5,
     database: 'food_review_system'
 });
@@ -13,7 +13,7 @@ const setUpDatabase = async () => {
     try {
         await pool.query("CREATE DATABASE IF NOT EXISTS food_review_system;");
 
-        
+
 
         await pool.query(`CREATE TABLE IF NOT EXISTS USER (
             Username VARCHAR(50) PRIMARY KEY,
@@ -26,7 +26,7 @@ const setUpDatabase = async () => {
             Birthday DATE,
             No_of_reviews INT
         );`);
-        
+
         await pool.query(`CREATE TABLE IF NOT EXISTS FOOD_ESTABLISHMENT (
             Establishment_id INT PRIMARY KEY AUTO_INCREMENT,
             Name VARCHAR(100),
@@ -89,4 +89,4 @@ const setUpDatabase = async () => {
 }
 
 
-export {pool, setUpDatabase};
+export { pool, setUpDatabase };
