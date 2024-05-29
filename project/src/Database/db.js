@@ -33,7 +33,6 @@ const setUpDatabase = async () => {
             Description TEXT,
             Address VARCHAR(255),
             Type VARCHAR(50)
-            -- CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES USER_REVIEWS_FOOD_ESTABLISHMENT(Establishment_id)
         );`)
 
         await pool.query(`CREATE TABLE IF NOT EXISTS USER_REVIEWS_FOOD_ESTABLISHMENT (
@@ -42,7 +41,7 @@ const setUpDatabase = async () => {
             review TEXT,
             Review_date_time DATETIME,
             Rating DECIMAL(3,2),
-            PRIMARY KEY (Username, Establishment_id),
+            PRIMARY KEY (Username, Establishment_id, Review_date_time),
             CONSTRAINT fk_user_reviews FOREIGN KEY (Username) REFERENCES USER(Username),
             CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
         );`);
@@ -77,7 +76,7 @@ const setUpDatabase = async () => {
             review TEXT,
             Review_date_time DATETIME,
             Rating INT,
-            PRIMARY KEY (Username, Item_id),
+            PRIMARY KEY (Username, Item_id, Review_date_time),
             CONSTRAINT fk_user_reviews_food_item FOREIGN KEY (Username) REFERENCES USER(Username),
             CONSTRAINT fk_user_reviews_item FOREIGN KEY (Item_id) REFERENCES FOOD_ITEM(Item_id)
         );`);
