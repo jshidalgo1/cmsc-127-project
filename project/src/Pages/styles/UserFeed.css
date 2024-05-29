@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff7e3;
+
+}
+
+/* .admin-body {
+    font-family: Arial, sans-serif;
+    background-color: #fff7e2;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+} */
+
+.user-feed {
+    padding: 20px;
+    margin: 0 8%;
+}
+
+.user-header {
+    margin-bottom: 60px;
+}
+
+.user-header h1 {
+    margin-bottom: 6px;
+}
+
+.user-feed h3 {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 10px;
+}
+
+.dashboard-text {
+    color: #759e5c;
+}
+
+.user-button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.no-items {
+    text-align: center;
+    color: #666;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 50px;
+}
+
+.no-items-large-text {
+    font-size: 28px;
+    font-weight: bold;
+    color: #3f3f3f;
+}
+
+.no-items-small-text {
+    margin-top: 15px;
+    font-size: 15px;
+    color: #999;
+}
+
+/* .no-items:hover {
+    background-color: #f9f9f9;
+} */
+
+.summary-table {
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.summary-table th,
+.summary-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.summary-table th {
+    background-color: #f1f1f1;
+    font-size: 18px;
+    color: #333;
+}
+
+.summary-table td {
+    font-size: 16px;
+    color: #666;
+}
+
+.summary-table tr:last-child td {
+    border-bottom: none;
+}
+
+.add-new-product-button {
+    background-color: #45a049;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 19px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.add-new-product-button:hover {
+    background-color: #2f7833;
+}
+
+/* .add-new-product-button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+} */
+
+.plus-sign {
+    font-size: 30px;
+    margin-right: 5px;
+}
+
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Adjust margin as needed */
+}

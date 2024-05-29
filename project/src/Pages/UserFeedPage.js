@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.js";
 import React, { useState } from "react";
+import "./styles/UserFeed.css";
 // import React from "react";
 // import "../../styles/UserFeedPage.css";
 // import React, { useState, useEffect } from "react";
