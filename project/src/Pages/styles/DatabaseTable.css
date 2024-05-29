@@ -1,0 +1,116 @@
+/* orderTable.css */
+
+.database-table {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.database-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.database-table th,
+.database-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.database-table th {
+    background-color: #f1f1f1;
+    font-size: 18px;
+    color: #333;
+}
+
+.database-table td {
+    font-size: 16px;
+    color: #666;
+}
+
+.database-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.database-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.database-table button {
+    font-weight: bold;
+    font-size: 16px;
+    background-color: #53883a;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.database-table button:hover {
+    background-color: #296b0b;
+}
+
+.database-table p {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.database-table h2 {
+    font-size: 24px;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.database-table .no-orders {
+    text-align: center;
+    color: #666;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 50px;
+}
+
+.database-table .no-orders-text {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #3f3f3f;
+}
+
+.database-table .small-text {
+    font-size: 15px;
+    color: #999;
+}
+
+
+.database-table .status-cell {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 10px;
+}
+
+.database-table .status-cell.pending {
+    font-weight: bold;
+    color: #c48206;
+    background-color: #fadeac;
+}
+
+.database-table .status-cell.completed {
+    font-weight: bold;
+    color: #18ad18;
+    background-color: #a7f8a7;
+}
+
+.database-table .status-cell.canceled {
+    font-weight: bold;
+    color: #ff3044;
+    background-color: #ffc5ca;
+}

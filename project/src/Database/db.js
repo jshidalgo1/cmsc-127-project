@@ -1,9 +1,9 @@
-import mariadb from 'mariadb'; 
+import mariadb from 'mariadb';
 
 const pool = mariadb.createPool({
-    host: 'localhost', 
-    user:'root', 
-    password: 'Napoli07!',
+    host: 'localhost',
+    user: 'root',
+    password: 'Napoli07!', // TODO: change password of local mariadb
     connectionLimit: 5,
     database: 'food_review_system'
 });
@@ -13,7 +13,7 @@ const setUpDatabase = async () => {
     try {
         await pool.query("CREATE DATABASE IF NOT EXISTS food_review_system;");
 
-        
+
 
         await pool.query(`CREATE TABLE IF NOT EXISTS USER (
             Username VARCHAR(50) PRIMARY KEY,
@@ -26,14 +26,13 @@ const setUpDatabase = async () => {
             Birthday DATE,
             No_of_reviews INT
         );`);
-        
+
         await pool.query(`CREATE TABLE IF NOT EXISTS FOOD_ESTABLISHMENT (
             Establishment_id INT PRIMARY KEY AUTO_INCREMENT,
             Name VARCHAR(100),
             Description TEXT,
             Address VARCHAR(255),
             Type VARCHAR(50)
-            -- CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES USER_REVIEWS_FOOD_ESTABLISHMENT(Establishment_id)
         );`)
 
         await pool.query(`CREATE TABLE IF NOT EXISTS USER_REVIEWS_FOOD_ESTABLISHMENT (
@@ -42,7 +41,7 @@ const setUpDatabase = async () => {
             review TEXT,
             Review_date_time DATETIME,
             Rating DECIMAL(3,2),
-            PRIMARY KEY (Username, Establishment_id),
+            PRIMARY KEY (Username, Establishment_id, Review_date_time),
             CONSTRAINT fk_user_reviews FOREIGN KEY (Username) REFERENCES USER(Username),
             CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
         );`);
@@ -77,7 +76,7 @@ const setUpDatabase = async () => {
             review TEXT,
             Review_date_time DATETIME,
             Rating INT,
-            PRIMARY KEY (Username, Item_id),
+            PRIMARY KEY (Username, Item_id, Review_date_time),
             CONSTRAINT fk_user_reviews_food_item FOREIGN KEY (Username) REFERENCES USER(Username),
             CONSTRAINT fk_user_reviews_item FOREIGN KEY (Item_id) REFERENCES FOOD_ITEM(Item_id)
         );`);
@@ -89,4 +88,4 @@ const setUpDatabase = async () => {
 }
 
 
-export {pool, setUpDatabase};
+export { pool, setUpDatabase };
