@@ -4,6 +4,9 @@ import HomePage from './Pages/HomePage.js';
 import SignUpPage from './Pages/SignUpPage.js';
 import UserFeedPage from './Pages/UserFeedPage.js';
 import FoodEstablishmentsPage from './Pages/FoodEstablishmentsPage.js';
+import FoodItemsPage from './Pages/FoodItemsPage.js';
+import UserReviewsPage from './Pages/UserReviewsPage.js';
+import UserProfilePage from './Pages/UserProfilePage.js';
 import DatabaseTablePage from './Pages/DatabaseTablePage.js';
 
 function App() {
@@ -13,9 +16,12 @@ function App() {
         {<Route path="/" element={<HomePage />} />}
         {<Route path="/signup" element={<SignUpPage />} />}
 
-        <Route path="/tables" element={<DatabaseTablePage />} />
         <Route path="/user-feed" element={<UserFeedPage />} />
         <Route path="/food-establishments" element={<FoodEstablishmentsPage />} />
+        <Route path="/food-items" element={<FoodItemsPage />} />
+        <Route path="/user-reviews" element={<UserReviewsPage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
+        <Route path="/tables" element={<DatabaseTablePage />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>

@@ -18,7 +18,7 @@ function FoodEstablishmentsPage() {
           </h3>
         </div>
 
-        <h2>Food Establishment Table</h2>
+        <h2>Establishments</h2>
         <FoodEstablishments data={FOOD_ESTABLISHMENT} /> {/* Pass FOOD_ESTABLISHMENT data here */}
 
       </div>

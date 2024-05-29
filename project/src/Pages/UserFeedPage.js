@@ -16,6 +16,14 @@ function UserFeedPage() {
       <Navbar user={user} />
 
       <div className="user-feed">
+
+        <div className="user-header">
+          <h1>Dashboard</h1>
+          <h3>
+            <span className="dashboard-text">Dashboard</span>
+          </h3>
+        </div>
+
         <h1>Welcome, {user ? user.firstName : "User"}!</h1>
 
       </div>
