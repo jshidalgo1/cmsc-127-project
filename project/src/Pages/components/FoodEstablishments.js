@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { FoodEstablishmentLinks, FoodEstablishmentContactNo } from "./FoodEstablishmentHelperComponents.js";
-import { FOOD_ESTABLISHMENT_links, FOOD_ESTABLISHMENT_CONTACT_NO } from "../dummyData.js";
 import "../styles/FoodEstablishmentsTable.css";
 
 const FoodEstablishments = () => {
@@ -20,7 +19,7 @@ const FoodEstablishments = () => {
 
         fetchData();
     }, []);
-    console.log(data);
+    // console.log(data);
     return (
         <div className="food-establishments-table">
             {data.length > 0 ? (

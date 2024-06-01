@@ -83,6 +83,14 @@ const getFoodEstablishments = async (req, res) => {
     }
 }
 
+const getFoodItems = async (req, res) => {
+    const sql = `SELECT * FROM FOOD_ITEM`;
+    pool.query(sql)
+    .then((result) => {
+        res.status(200).send(result);
+    });
+}
+
 // const getFoodEstablishmentLinks = async (req, res) => {
 //     const { estId } = req.body;
 //     const sql = `SELECT Links FROM FOOD_ESTABLISHMENT_links WHERE Establishment_id = ?`;
@@ -95,4 +103,4 @@ const getFoodEstablishments = async (req, res) => {
 // const getFoodEstablishmentContactNo = async (req, res) => {}
 
 
-export {addUser, authenticateUser, getFoodEstablishments};
+export {addUser, authenticateUser, getFoodEstablishments, getFoodItems};
