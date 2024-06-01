@@ -1,11 +1,26 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { FoodEstablishmentLinks, FoodEstablishmentContactNo } from "./FoodEstablishmentHelperComponents.js";
 import { FOOD_ESTABLISHMENT_links, FOOD_ESTABLISHMENT_CONTACT_NO } from "../dummyData.js";
 import "../styles/FoodEstablishmentsTable.css";
-import { useLocation } from "react-router-dom";
-const FoodEstablishments = ({ data }) => {
-    const location = useLocation();
-  const [user] = useState(location.state ? location.state.user : null);
+
+const FoodEstablishments = () => {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.post('http://localhost:3001/getFoodEstablishments');
+                setData(response.data);
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+    console.log(data);
     return (
         <div className="food-establishments-table">
             {data.length > 0 ? (
@@ -30,10 +45,10 @@ const FoodEstablishments = ({ data }) => {
                                 <td>{est.Description}</td>
                                 <td>{est.Address}</td>
                                 <td>
-                                    <FoodEstablishmentLinks data={FOOD_ESTABLISHMENT_links} estId={est.Establishment_id} />
+                                    <FoodEstablishmentLinks data={est.links} estId={est.Establishment_id} />
                                 </td>
                                 <td>
-                                    <FoodEstablishmentContactNo data={FOOD_ESTABLISHMENT_CONTACT_NO} estId={est.Establishment_id} />
+                                    <FoodEstablishmentContactNo data={est.contact_nos} estId={est.Establishment_id} />
                                 </td>
                             </tr>
                         ))}

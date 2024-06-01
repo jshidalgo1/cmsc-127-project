@@ -26,5 +26,73 @@ const authenticateUser = async (req, res) => {
 
 }
 
+// const getFoodEstablishments = async (req, res) => {
+//     const sql = `SELECT * FROM FOOD_ESTABLISHMENT`;
+    
+//     pool.query(sql)
+//     .then((result) => {
+//         res.status(200).send(result);
+//     });
+// }
 
-export {addUser, authenticateUser};
+const getFoodEstablishments = async (req, res) => {
+    const establishmentsSql = 'SELECT * FROM FOOD_ESTABLISHMENT';
+    const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
+    const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
+
+    try {
+        const establishments = await pool.query(establishmentsSql);
+        const links = await pool.query(linksSql);
+        const contactNos = await pool.query(contactNosSql);
+
+        const combinedData = establishments.map(est => {
+            const estLinks = links
+                .filter(link => link.Establishment_id === est.Establishment_id)
+                .map(link => link.links);
+            const estContactNos = contactNos
+                .filter(contactNo => contactNo.Establishment_id === est.Establishment_id)
+                .map(contactNo => contactNo.Contact_no);
+        
+            return {
+                ...est,
+                links: estLinks,
+                contact_nos: estContactNos
+            };
+        });
+
+        res.status(200).json(combinedData);
+        // const establishments = establishmentsResult.rows.map(est => {
+        //     const links = linksResult.rows
+        //         .filter(link => link.establishment_id === est.establishment_id)
+        //         .map(link => link.link);
+        //     const contactNos = contactNosResult.rows
+        //         .filter(contactNo => contactNo.establishment_id === est.establishment_id)
+        //         .map(contactNo => contactNo.contact_no);
+
+        //     return {
+        //         ...est,
+        //         links,
+        //         contact_nos: contactNos
+        //     };
+        // });
+        // console.log(establishments);
+        // res.status(200).json(establishments);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query');
+    }
+}
+
+// const getFoodEstablishmentLinks = async (req, res) => {
+//     const { estId } = req.body;
+//     const sql = `SELECT Links FROM FOOD_ESTABLISHMENT_links WHERE Establishment_id = ?`;
+//     pool.query(sql, [estId])
+//     .then((result) => {
+//         res.status(200).send(result);
+//     });
+// }
+
+// const getFoodEstablishmentContactNo = async (req, res) => {}
+
+
+export {addUser, authenticateUser, getFoodEstablishments};

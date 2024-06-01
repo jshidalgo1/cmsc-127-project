@@ -1,6 +1,5 @@
-import { useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.js";
-import React, { useState } from "react";
+import React from "react";
 import "./styles/UserFeed.css";
 import UserContext from "../Routes/UserContext.js";
 // import React from "react";
