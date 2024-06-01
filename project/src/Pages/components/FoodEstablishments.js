@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import React from "react";
 import { FoodEstablishmentLinks, FoodEstablishmentContactNo } from "./FoodEstablishmentHelperComponents.js";
 import "../styles/FoodEstablishmentsTable.css";
 
-const FoodEstablishments = () => {
-    const [data, setData] = useState([]);
+const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
+    const handleDelete = (establishmentId) => {
+        onDelete(establishmentId);
+    };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.post('http://localhost:3001/getFoodEstablishments');
-                setData(response.data);
-                
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+    const handleUpdate = (establishment) => {
+        onUpdate(establishment);
+    };
 
-        fetchData();
-    }, []);
-    // console.log(data);
+
     return (
         <div className="food-establishments-table">
             {data.length > 0 ? (
@@ -33,6 +25,7 @@ const FoodEstablishments = () => {
                             <th>Address</th>
                             <th>Links</th>
                             <th>Contact Number</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,6 +41,10 @@ const FoodEstablishments = () => {
                                 </td>
                                 <td>
                                     <FoodEstablishmentContactNo data={est.contact_nos} />
+                                </td>
+                                <td>
+                                    <button onClick={() => handleUpdate(est)}>Update</button> {""} {/* TODO: update feature */}
+                                    <button onClick={() => handleDelete(est.Establishment_id)}>Delete</button>
                                 </td>
                             </tr>
                         ))}
@@ -65,3 +62,4 @@ const FoodEstablishments = () => {
 };
 
 export default FoodEstablishments;
+

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar.js";
 import FoodEstablishments from "./components/FoodEstablishments.js";
 import EstablishmentForm from "./components/EstablishmentForm.js";
@@ -8,8 +8,26 @@ import axios from "axios";
 function FoodEstablishmentsPage() {
   const [user] = useState(null); // Assuming user state is not being used for now
 
+  const [establishments, setEstablishments] = useState([]);
+
   const [showModal, setShowModal] = useState(false);
   const [editingEstablishment, setEditingEstablishment] = useState(null);
+
+
+  const fetchEstablishments = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/getFoodEstablishments');
+      setEstablishments(response.data);
+
+    } catch (error) {
+      console.error('Error fetching establishments:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEstablishments();
+  }, []);
+
 
   // Function to handle the click event for adding a new establishment
   const handleAddEstablishmentClick = () => {
@@ -22,8 +40,8 @@ function FoodEstablishmentsPage() {
     setShowModal(false);
   };
 
-  // TODO: Function to handle saving a establishment (both add and update)
-  // Function to handle saving a new or edited establishment
+
+  // TODO:Function to handle saving a new or edited establishment
   const handleSaveEstablishment = async (establishment) => {
     try {
       if (establishment.Establishment_id) {
@@ -41,13 +59,41 @@ function FoodEstablishmentsPage() {
           establishment,
           { withCredentials: true }
         );
-        alert("Establishment added successfully!");
+        // alert("Establishment added successfully!");
       }
       setShowModal(false); // Close the modal
+      fetchEstablishments();
     } catch (error) {
       console.error("Error saving establishment:", error);
       alert("Failed to save establishment. Please try again.");
     }
+  };
+
+  // Function to handle the deletion of an establishment
+  const handleDeleteProduct = async (Establishment_id) => {
+    try {
+      console.log("Establishment id: ", Establishment_id);
+
+      await axios.delete(
+        `http://localhost:3001/deleteEstablishment`,
+        {
+          data: { Establishment_id },
+          withCredentials: true,
+        }
+      );
+
+      // alert("Establishment deleted successfully!");
+      fetchEstablishments();
+    } catch (error) {
+      console.error('Error deleting establishment:', error);
+      alert("Failed to delete establishment. Please try again.");
+    }
+  };
+
+  // Function to handle the update action for a establishment
+  const handleUpdateEstablishment = (establishment) => {
+    setEditingEstablishment(establishment); // Set the establishment to be edited
+    setShowModal(true); // Show the modal
   };
 
 
@@ -71,9 +117,7 @@ function FoodEstablishmentsPage() {
           </button>
         </div>
 
-
-        {/* <h2>Establishments</h2> */}
-        <FoodEstablishments /> {/* Pass FOOD_ESTABLISHMENT data here */}
+        <FoodEstablishments data={establishments} onDelete={handleDeleteProduct} onUpdate={handleUpdateEstablishment} /> {/* Pass FOOD_ESTABLISHMENT data here */}
 
 
         <Modal show={showModal} onClose={handleCloseModal}>

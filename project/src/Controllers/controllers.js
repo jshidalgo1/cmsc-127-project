@@ -167,4 +167,46 @@ const addEstablishment = async (req, res) => {
 };
 
 
-export { addUser, authenticateUser, getFoodEstablishments, getFoodItems, getFoodReviews, getFoodEstablishmentReviews, addEstablishment };
+const deleteEstablishment = async (req, res) => {
+    const { Establishment_id } = req.body;
+    const conn = await pool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+
+        // Delete related entries in food_establishment_contact_no table
+        const deleteContactsSql = `DELETE FROM FOOD_ESTABLISHMENT_CONTACT_NO WHERE Establishment_id = ?`;
+        await conn.query(deleteContactsSql, [Establishment_id]);
+
+        // Delete related entries in food_establishment_links table
+        const deleteLinksSql = `DELETE FROM FOOD_ESTABLISHMENT_LINKS WHERE Establishment_id = ?`;
+        await conn.query(deleteLinksSql, [Establishment_id]);
+
+        // Delete the establishment
+        const deleteEstablishmentSql = `DELETE FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+        await conn.query(deleteEstablishmentSql, [Establishment_id]);
+
+        await conn.commit();
+        res.status(200).json({ success: `Establishment deleted successfully!` });
+    } catch (error) {
+        await conn.rollback();
+        console.error('Error deleting establishment:', error.stack);
+        res.status(500).send('Error deleting establishment: ' + error.message);
+    } finally {
+        conn.release();
+    }
+};
+
+
+
+export {
+    addUser,
+    authenticateUser,
+    getFoodEstablishments,
+    getFoodItems,
+    getFoodReviews,
+    getFoodEstablishmentReviews,
+    addEstablishment,
+    deleteEstablishment
+};
+

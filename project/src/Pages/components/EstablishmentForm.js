@@ -125,6 +125,15 @@ const EstablishmentForm = ({ establishment, onSave }) => {
                     />
                 </div>
                 <div>
+                    <label>Description:</label>
+                    <input
+                        type="text"
+                        value={estDescription}
+                        onChange={(e) => setEstDescription(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
                     <label>Address:</label>
                     <input
                         type="text"
