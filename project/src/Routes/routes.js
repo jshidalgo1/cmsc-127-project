@@ -1,4 +1,4 @@
-import { addUser, authenticateUser, getFoodEstablishments, getFoodItems, getFoodReviews, getFoodEstablishmentReviews } from '../Controllers/controllers.js';
+import { addUser, authenticateUser, getFoodEstablishments, getFoodItems, getFoodReviews, getFoodEstablishmentReviews, addEstablishment } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
     app.post("/addUser", addUser);
@@ -7,7 +7,9 @@ const setUpRoutes = (app) => {
     app.post("/getFoodItems", getFoodItems);
     app.get('/getFoodReviews', getFoodReviews);
     app.get('/getFoodEstablishmentReviews', getFoodEstablishmentReviews);
-    
+    app.post('/addEstablishment', addEstablishment);
+
 }
 
 export default setUpRoutes;
+

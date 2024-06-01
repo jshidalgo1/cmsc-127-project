@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar.js";
 import FoodEstablishments from "./components/FoodEstablishments.js";
 import EstablishmentForm from "./components/EstablishmentForm.js";
 import Modal from "./components/Modal.js";
+import axios from "axios";
 
 function FoodEstablishmentsPage() {
   const [user] = useState(null); // Assuming user state is not being used for now
@@ -22,10 +23,32 @@ function FoodEstablishmentsPage() {
   };
 
   // TODO: Function to handle saving a establishment (both add and update)
+  // Function to handle saving a new or edited establishment
   const handleSaveEstablishment = async (establishment) => {
-    setShowModal(false);
-    console.log("Adding / Editing Establishment sucess");
-  }
+    try {
+      if (establishment.Establishment_id) {
+        // If establishment ID exists, it means it's an update
+        // await axios.put(
+        //     `http://localhost:3001/updateEstablishment/${establishment.Establishment_id}`,
+        //     establishment,
+        //     { withCredentials: true }
+        // );
+        // alert("Establishment updated successfully!");
+      } else {
+        // If no establishment ID, it's a new establishment
+        await axios.post(
+          "http://localhost:3001/addEstablishment",
+          establishment,
+          { withCredentials: true }
+        );
+        alert("Establishment added successfully!");
+      }
+      setShowModal(false); // Close the modal
+    } catch (error) {
+      console.error("Error saving establishment:", error);
+      alert("Failed to save establishment. Please try again.");
+    }
+  };
 
 
   return (
