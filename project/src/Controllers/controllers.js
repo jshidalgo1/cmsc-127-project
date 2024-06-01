@@ -102,5 +102,29 @@ const getFoodItems = async (req, res) => {
 
 // const getFoodEstablishmentContactNo = async (req, res) => {}
 
+const getFoodReviews = async (req, res) => {
+    const sql = `SELECT * FROM USER_REVIEWS_FOOD_ITEM`;
+    pool.query(sql)
+    .then((result) => {
+        res.status(200).send(result);
+    })
+    .catch((error) => {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query');
+    });
+}
 
-export {addUser, authenticateUser, getFoodEstablishments, getFoodItems};
+const getFoodEstablishmentReviews = async (req, res) => {
+    const { establishmentId } = req.params; // Assuming the establishment ID is passed as a URL parameter
+    const sql = `SELECT * FROM USER_REVIEWS_FOOD_ESTABLISHMENT`;
+    pool.query(sql)
+    .then((result) => {
+        res.status(200).send(result);
+    })
+    .catch((error) => {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query');
+    });
+}
+
+export { addUser, authenticateUser, getFoodEstablishments, getFoodItems, getFoodReviews, getFoodEstablishmentReviews };
