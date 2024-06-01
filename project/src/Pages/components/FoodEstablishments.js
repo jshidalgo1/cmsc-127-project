@@ -45,10 +45,10 @@ const FoodEstablishments = () => {
                                 <td>{est.Description}</td>
                                 <td>{est.Address}</td>
                                 <td>
-                                    <FoodEstablishmentLinks data={est.links} estId={est.Establishment_id} />
+                                    <FoodEstablishmentLinks data={est.links} />
                                 </td>
                                 <td>
-                                    <FoodEstablishmentContactNo data={est.contact_nos} estId={est.Establishment_id} />
+                                    <FoodEstablishmentContactNo data={est.contact_nos} />
                                 </td>
                             </tr>
                         ))}

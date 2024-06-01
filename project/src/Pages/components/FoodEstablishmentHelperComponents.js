@@ -1,6 +1,6 @@
 import React from "react";
 
-const FoodEstablishmentLinks = ({ data, estId }) => {
+const FoodEstablishmentLinks = ({ data }) => {
     return (
         <>
             {data.map((link, index) => (
@@ -12,7 +12,7 @@ const FoodEstablishmentLinks = ({ data, estId }) => {
     );
 };
 
-const FoodEstablishmentContactNo = ({ data, estId }) => {
+const FoodEstablishmentContactNo = ({ data }) => {
     return (
         <div>
             {data.map((contact, index) => (
