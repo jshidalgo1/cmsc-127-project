@@ -11,4 +11,18 @@ const addUser = async (req, res) => {
         res.status(200).json({ success: `User ${username} added successfully!`});
     });
 }
-export {addUser};
+
+const authenticateUser = async (req, res) => {
+    const { username, password } = req.body;
+    const sql = `SELECT * FROM USER WHERE Username = ? AND Password = ?`;
+    pool.query(sql, [username, password])
+    .then((result) => {
+        if (result.length > 0) {
+            res.status(200).json({ user: result[0] });
+        } else {
+            res.status(401).json({ error: 'Invalid username or password' });
+        }
+    });
+
+}
+export {addUser, authenticateUser};

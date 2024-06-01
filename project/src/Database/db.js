@@ -11,6 +11,7 @@ const pool = mariadb.createPool({
 
 const setUpDatabase = async () => {
     try {
+        
         await pool.query("CREATE DATABASE IF NOT EXISTS food_review_system;");
 
 
