@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import UserContext from '../Routes/UserContext.js';
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -22,8 +24,9 @@ const HomePage = () => {
             const { user } = await response.json();
             // The user is authenticated. You can now use the `user` object.
             console.log(user);
+            setUser(user); // Set the user in the context
             // Navigate to the /user-feed page
-            navigate('/user-feed', { state: { user } });
+            navigate('/user-feed');
         } else {
             // Handle error
             console.log('Authentication failed');

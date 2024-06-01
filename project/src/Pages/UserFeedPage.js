@@ -2,15 +2,14 @@ import { useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.js";
 import React, { useState } from "react";
 import "./styles/UserFeed.css";
+import UserContext from "../Routes/UserContext.js";
 // import React from "react";
 // import "../../styles/UserFeedPage.css";
 // import React, { useState, useEffect } from "react";
 // import axios from "axios";
 
 function UserFeedPage() {
-  const location = useLocation();
-  const [user] = useState(location.state ? location.state.user : null);
-
+  const { user } = React.useContext(UserContext);
   return (
     <>
       <Navbar user={user} />
@@ -24,7 +23,7 @@ function UserFeedPage() {
           </h3>
         </div>
 
-        <h1>Welcome, {user ? user.firstName : "User"}!</h1>
+        <h1>Welcome, {user ? user.First_name : "User"}!</h1>
 
       </div>
     </>

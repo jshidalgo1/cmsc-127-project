@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import { FoodEstablishmentLinks, FoodEstablishmentContactNo } from "./FoodEstablishmentHelperComponents.js";
 import { FOOD_ESTABLISHMENT_links, FOOD_ESTABLISHMENT_CONTACT_NO } from "../dummyData.js";
 import "../styles/FoodEstablishmentsTable.css";
-
+import { useLocation } from "react-router-dom";
 const FoodEstablishments = ({ data }) => {
+    const location = useLocation();
+  const [user] = useState(location.state ? location.state.user : null);
     return (
         <div className="food-establishments-table">
             {data.length > 0 ? (

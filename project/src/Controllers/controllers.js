@@ -25,4 +25,6 @@ const authenticateUser = async (req, res) => {
     });
 
 }
+
+
 export {addUser, authenticateUser};

@@ -5,28 +5,18 @@ import "../styles/Navbar.css";
 
 // function Navbar({ user, items }) {
 //   const navigate = useNavigate();
-function Navbar(user) {
-
+function Navbar({ user }) {
   return (
     <>
       <nav className="navbar">
         <ul>
-          <li><Link to="/user-feed">Dashboard</Link></li>
-          <li><Link to="/food-establishments">Food Establishments</Link></li>
-          <li><Link to="/food-items">Food Items</Link></li>
-          <li><Link to="/user-reviews">Reviews</Link></li> {/* TODO: fetch reviews of current user*/}
-          <li>
-            {/* Pass the user object as a parameter */}
-            <Link
-              to={{
-                pathname: "/profile",
-                state: { user: user },
-              }}
-            >Profile
-            </Link>
-          </li>
-          <li><Link to="/tables">Tables</Link></li>
-          <li><Link to="/"><span style={{ cursor: 'pointer' }} >Logout</span></Link></li> {/* TODO: add logout feature*/}
+          <li><Link to={{ pathname: "/user-feed", state: { user } }}>Dashboard</Link></li>
+          <li><Link to={{ pathname: "/food-establishments", state: { user } }}>Food Establishments</Link></li>
+          <li><Link to={{ pathname: "/food-items", state: { user } }}>Food Items</Link></li>
+          <li><Link to={{ pathname: "/user-reviews", state: { user } }}>Reviews</Link></li>
+          <li><Link to={{ pathname: "/profile", state: { user } }}>Profile</Link></li>
+          <li><Link to={{ pathname: "/tables", state: { user } }}>Tables</Link></li>
+          <li><Link to={{ pathname: "/", state: { user } }}><span style={{ cursor: 'pointer' }} >Logout</span></Link></li>
         </ul>
       </nav>
     </>
