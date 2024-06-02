@@ -303,7 +303,7 @@ const getEstablishment = async (req, res) => {
             Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
         };
 
-        console.log('Establishment Query Result:', establishment); // Log the links query result
+        // console.log('Establishment Query Result:', establishment); // Log the links query result
 
         res.status(200).json(establishment);
     } catch (error) {
@@ -311,6 +311,51 @@ const getEstablishment = async (req, res) => {
         res.status(500).send('Error fetching establishment details: ' + error.message);
     }
 };
+
+// Search Establishment by Name
+const searchEstablishmentByName = async (req, res) => {
+    const { name } = req.query;
+    const sql = `
+        SELECT 
+            FOOD_ESTABLISHMENT.Establishment_id, 
+            Name, 
+            Type, 
+            Description, 
+            Address, 
+            COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
+            COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS contact_nos
+        FROM 
+            FOOD_ESTABLISHMENT 
+            LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
+            LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_CONTACT_NO.Establishment_id
+        WHERE Name LIKE ?
+        GROUP BY Establishment_id
+    `;
+
+    const searchPattern = `%${name}%`;
+
+    try {
+        const establishmentResults = await pool.query(sql, [searchPattern]);
+
+        const establishments = establishmentResults.map(establishmentResult => ({
+            Establishment_id: establishmentResult.Establishment_id,
+            Name: establishmentResult.Name,
+            Description: establishmentResult.Description,
+            Address: establishmentResult.Address,
+            Type: establishmentResult.Type,
+            links: establishmentResult.links ? establishmentResult.links.split(',') : [],
+            contact_nos: establishmentResult.contact_nos ? establishmentResult.contact_nos.split(',') : []
+        }));
+
+        console.log('searchEstablishmentByName Result:', establishments);
+        res.status(200).json(establishments);
+    } catch (error) {
+        console.error('Error searching establishments by name:', error.stack);
+        res.status(500).send('Error searching establishments by name');
+    }
+};
+
+
 
 
 
@@ -325,5 +370,6 @@ export {
     addEstablishment,
     deleteEstablishment,
     updateEstablishment,
-    getEstablishment
+    getEstablishment,
+    searchEstablishmentByName
 };

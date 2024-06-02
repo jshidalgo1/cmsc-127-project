@@ -9,6 +9,7 @@ function FoodEstablishmentsPage() {
   const [user] = useState(null); // Assuming user state is not being used for now
 
   const [establishments, setEstablishments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [editingEstablishment, setEditingEstablishment] = useState(null);
@@ -16,7 +17,17 @@ function FoodEstablishmentsPage() {
 
   const fetchEstablishments = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/getFoodEstablishments');
+      let response;
+      if (searchQuery) {
+        response = await axios.get(
+          `http://localhost:3001/searchEstablishments?name=${searchQuery}`
+        );
+      } else {
+        response = await axios.post(
+          "http://localhost:3001/getFoodEstablishments"
+        );
+      }
+
       setEstablishments(response.data);
 
     } catch (error) {
@@ -26,7 +37,8 @@ function FoodEstablishmentsPage() {
 
   useEffect(() => {
     fetchEstablishments();
-  }, []);
+  }, [searchQuery]);
+
 
 
   // Function to handle the click event for adding a new establishment
@@ -65,6 +77,7 @@ function FoodEstablishmentsPage() {
       setShowModal(false); // Close the modal
       fetchEstablishments();
     } catch (error) {
+      console.error("Error saving establishment:", error);
       console.error("Error saving establishment:", error);
       alert("Failed to save establishment. Please try again.");
     }
@@ -119,7 +132,19 @@ function FoodEstablishmentsPage() {
 
 
         <div className="inventory-header">
-          <h2>Establishments</h2>
+          <div className="left-inventory-header">
+            <h2>Establishments</h2>
+
+            <div className="search-container">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name..."
+              />
+            </div>
+          </div>
+
           <button className="add-new-establishment-button" onClick={handleAddEstablishmentClick}>
             <span className="plus-sign">+</span> Add New Food Establishment
           </button>
@@ -134,6 +159,8 @@ function FoodEstablishmentsPage() {
             onSave={handleSaveEstablishment}
           />
         </Modal>
+
+
 
       </div>
 
