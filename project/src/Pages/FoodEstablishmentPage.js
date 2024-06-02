@@ -110,9 +110,7 @@ function FoodEstablishmentPage() {
 
         <FoodEstablishments
           data={establishment}
-          foodItems={filteredFoodItems}
-          onDelete={handleDeleteFoodItem}
-          onUpdate={handleUpdateFoodItem}
+          noAction={1}
         />
 
         <div className="inventory-header">

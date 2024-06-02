@@ -86,7 +86,7 @@ function FoodEstablishmentsPage() {
   };
 
   // Function to handle the deletion of an establishment
-  const handleDeleteProduct = async (Establishment_id) => {
+  const handleDeleteEstablishment = async (Establishment_id) => {
     try {
       console.log("Establishment id: ", Establishment_id);
 
@@ -154,7 +154,7 @@ function FoodEstablishmentsPage() {
           </button>
         </div>
 
-        <FoodEstablishments data={establishments} onDelete={handleDeleteProduct} onUpdate={handleUpdateEstablishment} /> {/* Pass FOOD_ESTABLISHMENT data here */}
+        <FoodEstablishments data={establishments} onDelete={handleDeleteEstablishment} onUpdate={handleUpdateEstablishment} /> {/* Pass FOOD_ESTABLISHMENT data here */}
 
 
         <Modal show={showModal} onClose={handleCloseModal}>
