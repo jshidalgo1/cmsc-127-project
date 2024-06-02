@@ -26,6 +26,9 @@ const setUpRoutes = (app) => {
     app.get('/getEstablishment/:id', getEstablishment);
     app.get("/searchEstablishments", searchEstablishmentByName);
     app.post('/saveEstablishmentReview', saveEstablishmentReview);
+    app.post('/getAllFoodItemsOrderedByEstablishmentName', getAllFoodItemsOrderedByEstablishmentName);
+    app.post('/getAllFoodItemsOrderedByEstablishmentNameAndFoodType', getAllFoodItemsOrderedByEstablishmentNameAndFoodType);
+    app.post('/getAllFoodItemsOrderedByEstablishmentNameAndPrice', getAllFoodItemsOrderedByEstablishmentNameAndPrice);
 
 }
 

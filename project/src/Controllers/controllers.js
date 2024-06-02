@@ -352,6 +352,107 @@ const saveEstablishmentReview = async (req, res) => {
         });
 }
 
+const getAllFoodItemsOrderedByEstablishmentName = async (req, res) => {
+    const sql = `
+        SELECT fi.*, fe.Name as EstablishmentName
+        FROM Food_Item fi
+        JOIN Food_Establishment fe ON fi.Establishment_id = fe.Establishment_id
+        ORDER BY fe.Name;
+    `;
+
+    try {
+        const result = await pool.query(sql); // Execute query without destructuring
+        console.log('Raw query result:', result); // Log the raw result to understand its structure
+
+        // Inspect the type and structure of the result
+        if (Array.isArray(result)) {
+            console.log('Result is an array:', result);
+            if (result.length > 0 && Array.isArray(result[0])) {
+                const [rows] = result; // Destructure rows from the result
+                console.log('Query result length:', rows.length); // Log the length of the result
+                console.log('Query result:', rows); // Log the actual result
+                res.status(200).json(rows); // Send the rows directly
+            } else {
+                console.log('First element of result is not an array:', result[0]);
+                res.status(200).json(result); // Send the result directly
+            }
+        } else {
+            console.log('Result is not an array:', result);
+            res.status(200).json(result); // Send the result directly
+        }
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query: ' + error.message);
+    }
+};
+
+const getAllFoodItemsOrderedByEstablishmentNameAndFoodType = async (req, res) => {
+    const sql = `
+        SELECT fi.*, fe.Name as EstablishmentName
+        FROM Food_Item fi
+        JOIN Food_Establishment fe ON fi.Establishment_id = fe.Establishment_id
+        ORDER BY fe.Name, fi.Food_type;
+    `;
+
+    try {
+        const result = await pool.query(sql); // Execute query without destructuring
+        console.log('Raw query result:', result); // Log the raw result to understand its structure
+
+        // Inspect the type and structure of the result
+        if (Array.isArray(result)) {
+            console.log('Result is an array:', result);
+            if (result.length > 0 && Array.isArray(result[0])) {
+                const [rows] = result; // Destructure rows from the result
+                console.log('Query result length:', rows.length); // Log the length of the result
+                console.log('Query result:', rows); // Log the actual result
+                res.status(200).json(rows); // Send the rows directly
+            } else {
+                console.log('First element of result is not an array:', result[0]);
+                res.status(200).json(result); // Send the result directly
+            }
+        } else {
+            console.log('Result is not an array:', result);
+            res.status(200).json(result); // Send the result directly
+        }
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query: ' + error.message);
+    }
+};
+
+const getAllFoodItemsOrderedByEstablishmentNameAndPrice = async (req, res) => {
+    const sql = `
+        SELECT fi.*, fe.Name as EstablishmentName
+        FROM Food_Item fi
+        JOIN Food_Establishment fe ON fi.Establishment_id = fe.Establishment_id
+        ORDER BY fe.Name, CAST(Price AS DECIMAL(10, 2));
+    `;
+
+    try {
+        const result = await pool.query(sql); // Execute query without destructuring
+        console.log('Raw query result:', result); // Log the raw result to understand its structure
+
+        // Inspect the type and structure of the result
+        if (Array.isArray(result)) {
+            console.log('Result is an array:', result);
+            if (result.length > 0 && Array.isArray(result[0])) {
+                const [rows] = result; // Destructure rows from the result
+                console.log('Query result length:', rows.length); // Log the length of the result
+                console.log('Query result:', rows); // Log the actual result
+                res.status(200).json(rows); // Send the rows directly
+            } else {
+                console.log('First element of result is not an array:', result[0]);
+                res.status(200).json(result); // Send the result directly
+            }
+        } else {
+            console.log('Result is not an array:', result);
+            res.status(200).json(result); // Send the result directly
+        }
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query: ' + error.message);
+    }
+};
 
 
 
@@ -368,5 +469,8 @@ export {
     updateEstablishment,
     getEstablishment,
     searchEstablishmentByName,
-    saveEstablishmentReview
+    saveEstablishmentReview,
+    getAllFoodItemsOrderedByEstablishmentName,
+    getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
+    getAllFoodItemsOrderedByEstablishmentNameAndPrice,
 };
