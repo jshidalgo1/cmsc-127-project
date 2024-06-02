@@ -128,6 +128,7 @@ const getFoodEstablishmentReviews = async (req, res) => {
 }
 
 
+// Add Establishment
 const addEstablishment = async (req, res) => {
     const { Name, Description, Address, Type, Links, ContactNumbers } = req.body;
     const conn = await pool.getConnection();
@@ -166,7 +167,7 @@ const addEstablishment = async (req, res) => {
     }
 };
 
-
+// Delete Establishment
 const deleteEstablishment = async (req, res) => {
     const { Establishment_id } = req.body;
     const conn = await pool.getConnection();
@@ -197,6 +198,105 @@ const deleteEstablishment = async (req, res) => {
     }
 };
 
+// Update Establishment
+const updateEstablishment = async (req, res) => {
+    const { Establishment_id, Name, Description, Address, Type, Links, ContactNumbers } = req.body;
+    const conn = await pool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+
+        // Update establishment details
+        const updateEstablishmentSql = `UPDATE FOOD_ESTABLISHMENT SET Name = ?, Description = ?, Address = ?, Type = ? WHERE Establishment_id = ?`;
+        await conn.query(updateEstablishmentSql, [Name, Description, Address, Type, Establishment_id]);
+
+        // Handle links
+        if (Array.isArray(Links) && Links.length > 0) {
+            // Delete existing links
+            const deleteLinksSql = `DELETE FROM FOOD_ESTABLISHMENT_LINKS WHERE Establishment_id = ?`;
+            await conn.query(deleteLinksSql, [Establishment_id]);
+
+            // Insert new links
+            const linkSql = `INSERT INTO FOOD_ESTABLISHMENT_LINKS (Establishment_id, links) VALUES (?, ?)`;
+            for (const link of Links) {
+                await conn.query(linkSql, [Establishment_id, link]);
+            }
+        }
+
+        // Handle contact numbers
+        if (Array.isArray(ContactNumbers) && ContactNumbers.length > 0) {
+            // Delete existing contact numbers
+            const deleteContactsSql = `DELETE FROM FOOD_ESTABLISHMENT_CONTACT_NO WHERE Establishment_id = ?`;
+            await conn.query(deleteContactsSql, [Establishment_id]);
+
+            // Insert new contact numbers
+            const contactSql = `INSERT INTO FOOD_ESTABLISHMENT_CONTACT_NO (Establishment_id, Contact_no) VALUES (?, ?)`;
+            for (const number of ContactNumbers) {
+                await conn.query(contactSql, [Establishment_id, number]);
+            }
+        }
+
+        await conn.commit();
+        res.status(200).json({ success: `Establishment updated successfully!` });
+    } catch (error) {
+        await conn.rollback();
+        console.error('Error updating establishment:', error.stack);
+        res.status(500).send('Error updating establishment: ' + error.message);
+    } finally {
+        conn.release();
+    }
+};
+
+
+
+// Get Establishment by Id
+const getEstablishment = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const establishmentQuery = `
+            SELECT 
+                FOOD_ESTABLISHMENT.Establishment_id, 
+                Name, 
+                Type, 
+                Description, 
+                Address, 
+                COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
+                COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
+            FROM 
+                FOOD_ESTABLISHMENT 
+                LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
+                LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_CONTACT_NO.Establishment_id
+            WHERE 
+                FOOD_ESTABLISHMENT.Establishment_id = ?`;
+
+        // SELECT * FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+        const [establishmentResult] = await pool.query(establishmentQuery, [id]);
+
+
+        if (!establishmentResult) {
+            return res.status(404).json({ error: 'Establishment not found' });
+        }
+
+        const establishment = {
+            Establishment_id: establishmentResult.Establishment_id,
+            Name: establishmentResult.Name,
+            Description: establishmentResult.Description,
+            Address: establishmentResult.Address,
+            Type: establishmentResult.Type,
+            links: establishmentResult.links ? establishmentResult.links.split(',') : [],
+            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
+        };
+
+        console.log('Establishment Query Result:', establishment); // Log the links query result
+
+        res.status(200).json(establishment);
+    } catch (error) {
+        console.error('Error fetching establishment details:', error.stack);
+        res.status(500).send('Error fetching establishment details: ' + error.message);
+    }
+};
+
+
 
 
 export {
@@ -207,6 +307,7 @@ export {
     getFoodReviews,
     getFoodEstablishmentReviews,
     addEstablishment,
-    deleteEstablishment
+    deleteEstablishment,
+    updateEstablishment,
+    getEstablishment
 };
-

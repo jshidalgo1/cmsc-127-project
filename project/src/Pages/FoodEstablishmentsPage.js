@@ -41,17 +41,18 @@ function FoodEstablishmentsPage() {
   };
 
 
-  // TODO:Function to handle saving a new or edited establishment
+  // Function to handle saving a new or edited establishment
   const handleSaveEstablishment = async (establishment) => {
     try {
       if (establishment.Establishment_id) {
         // If establishment ID exists, it means it's an update
-        // await axios.put(
-        //     `http://localhost:3001/updateEstablishment/${establishment.Establishment_id}`,
-        //     establishment,
-        //     { withCredentials: true }
-        // );
-        // alert("Establishment updated successfully!");
+        await axios.put(
+          "http://localhost:3001/updateEstablishment",
+          establishment,
+          { withCredentials: true }
+        );
+        alert("Establishment updated successfully!");
+
       } else {
         // If no establishment ID, it's a new establishment
         await axios.post(
@@ -59,7 +60,7 @@ function FoodEstablishmentsPage() {
           establishment,
           { withCredentials: true }
         );
-        // alert("Establishment added successfully!");
+        alert("Establishment added successfully!");
       }
       setShowModal(false); // Close the modal
       fetchEstablishments();
@@ -91,9 +92,16 @@ function FoodEstablishmentsPage() {
   };
 
   // Function to handle the update action for a establishment
-  const handleUpdateEstablishment = (establishment) => {
-    setEditingEstablishment(establishment); // Set the establishment to be edited
-    setShowModal(true); // Show the modal
+  const handleUpdateEstablishment = async (establishment) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/getEstablishment/${establishment.Establishment_id}`);
+      console.log('Fetched establishment data:', response.data); // Log the response data
+      setEditingEstablishment(response.data); // Assuming response.data contains the establishment details
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error fetching establishment details:', error);
+      alert("Failed to fetch establishment details. Please try again.");
+    }
   };
 
 

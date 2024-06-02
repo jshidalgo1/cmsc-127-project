@@ -6,7 +6,9 @@ import {
     getFoodReviews,
     getFoodEstablishmentReviews,
     addEstablishment,
-    deleteEstablishment
+    deleteEstablishment,
+    updateEstablishment,
+    getEstablishment
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
@@ -18,6 +20,8 @@ const setUpRoutes = (app) => {
     app.get('/getFoodEstablishmentReviews', getFoodEstablishmentReviews);
     app.post('/addEstablishment', addEstablishment);
     app.delete('/deleteEstablishment', deleteEstablishment);
+    app.put('/updateEstablishment', updateEstablishment);
+    app.get('/getEstablishment/:id', getEstablishment);
 
 }
 

@@ -2,23 +2,32 @@ import React, { useState, useEffect } from 'react';
 import '../styles/EstablishmentForm.css';
 
 const EstablishmentForm = ({ establishment, onSave }) => {
+    // console.log('establishment to edit:', establishment);
     const [estName, setEstName] = useState(establishment ? establishment.Name : '');
     const [estType, setEstType] = useState(establishment ? establishment.Type : '');
     const [estDescription, setEstDescription] = useState(establishment ? establishment.Description : '');
     const [estAddress, setEstAddress] = useState(establishment ? establishment.Address : '');
-    const [estLinks, setEstLinks] = useState(establishment ? establishment.Links : ['']);
-    const [estContactNumbers, setEstContactNumbers] = useState(establishment ? establishment.ContactNumbers : ['']);
+    const [estLinks, setEstLinks] = useState(establishment ? (establishment.links && establishment.links.length > 0 ? establishment.links : ['']) : ['']);
+    const [estContactNumbers, setEstContactNumbers] = useState(establishment ? (establishment.Contact_no && establishment.Contact_no.length > 0 ? establishment.Contact_no : ['']) : ['']);
 
     useEffect(() => {
         if (establishment) {
-            setEstName(establishment.Name);
-            setEstType(establishment.Type);
-            setEstDescription(establishment.Description);
-            setEstAddress(establishment.Address);
-            setEstLinks(establishment.Links || ['']);
-            setEstContactNumbers(establishment.ContactNumbers || ['']);
+            setEstName(establishment.Name || '');
+            setEstType(establishment.Type || '');
+            setEstDescription(establishment.Description || '');
+            setEstAddress(establishment.Address || '');
+            setEstLinks(establishment.links && establishment.links.length > 0 ? establishment.links : ['']);
+            setEstContactNumbers(establishment.Contact_no && establishment.Contact_no.length > 0 ? establishment.Contact_no : ['']);
+        } else {
+            setEstName('');
+            setEstType('');
+            setEstDescription('');
+            setEstAddress('');
+            setEstLinks(['']);
+            setEstContactNumbers(['']);
         }
     }, [establishment]);
+
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -35,6 +44,7 @@ const EstablishmentForm = ({ establishment, onSave }) => {
 
         onSave(updatedEstablishment);
     };
+
 
     const handleLinkChange = (index, value) => {
         const newLinks = [...estLinks];

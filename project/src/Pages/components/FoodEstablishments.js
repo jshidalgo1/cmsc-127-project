@@ -43,7 +43,7 @@ const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
                                     <FoodEstablishmentContactNo data={est.contact_nos} />
                                 </td>
                                 <td>
-                                    <button onClick={() => handleUpdate(est)}>Update</button> {""} {/* TODO: update feature */}
+                                    <button onClick={() => handleUpdate(est)}>Update</button> {""}
                                     <button onClick={() => handleDelete(est.Establishment_id)}>Delete</button>
                                 </td>
                             </tr>
