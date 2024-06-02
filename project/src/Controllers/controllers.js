@@ -507,26 +507,74 @@ const deleteEstablishmentReviews = async (req, res) => {
         });
 }
 
-const updateEstablishmentReview = async (req, res) => {
-    
-}
-
-const getSpecificFoodEstablishmentReview = async (req, res) => {
-    const { establishment_id, username, review_date_time } = req.params;
-    const sql = `SELECT * FROM USER_REVIEWS_FOOD_ESTABLISHMENT WHERE Establishment_id = ? AND Username = ? AND review_date_time = ?`;
+const getAllFoodEstablishmentReviewsWithinMonth = async (req, res) => {
+    const sql = `
+        SELECT reviews.*, est.Name as EstablishmentName
+        FROM USER_REVIEWS_FOOD_ESTABLISHMENT reviews
+        JOIN FOOD_ESTABLISHMENT est ON reviews.Establishment_id = est.Establishment_id
+        WHERE reviews.Review_date_time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        ORDER BY est.Name;
+    `;
     try {
-        const [review] = await pool.query(sql, [establishment_id, username, review_date_time]);
+        const result = await pool.query(sql); // Execute query without destructuring
+        console.log('Raw query result:', result); // Log the raw result to understand its structure
 
-        if (!review) {
-            return res.status(404).json({ error: 'Review not found' });
+        // Inspect the type and structure of the result
+        if (Array.isArray(result)) {
+            console.log('Result is an array:', result);
+            if (result.length > 0 && Array.isArray(result[0])) {
+                const [rows] = result; // Destructure rows from the result
+                console.log('Query result length:', rows.length); // Log the length of the result
+                console.log('Query result:', rows); // Log the actual result
+                res.status(200).json(rows); // Send the rows directly
+            } else {
+                console.log('First element of result is not an array:', result[0]);
+                res.status(200).json(result); // Send the result directly
+            }
+        } else {
+            console.log('Result is not an array:', result);
+            res.status(200).json(result); // Send the result directly
         }
-
-        res.status(200).json(review);
     } catch (error) {
-        console.error('Error fetching specific establishment review:', error.stack);
-        res.status(500).send('Error fetching specific establishment review: ' + error.message);
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query: ' + error.message);
     }
-    };
+};
+
+const getAllFoodItemReviewsWithinMonth = async (req, res) => {
+    const sql = `
+        SELECT reviews.*, item.Name as ItemName
+        FROM USER_REVIEWS_FOOD_ITEM reviews
+        JOIN FOOD_ITEM item ON reviews.Item_id = item.Item_id
+        WHERE reviews.Review_date_time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        ORDER BY item.Name;
+    `;
+    try {
+        const result = await pool.query(sql);
+        console.log('Raw query result:', result);
+
+        if (Array.isArray(result)) {
+            console.log('Result is an array:', result);
+            if (result.length > 0 && Array.isArray(result[0])) {
+                const [rows] = result;
+                console.log('Query result length:', rows.length);
+                console.log('Query result:', rows);
+                res.status(200).json(rows);
+            } else {
+                console.log('First element of result is not an array:', result[0]);
+                res.status(200).json(result);
+            }
+        } else {
+            console.log('Result is not an array:', result);
+            res.status(200).json(result);
+        }
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query: ' + error.message);
+    }
+};
+
+
 
 
 export {
@@ -548,7 +596,6 @@ export {
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,
-    getSpecificFoodEstablishmentReview,
-    updateEstablishmentReview,
-
+    getAllFoodEstablishmentReviewsWithinMonth,
+    getAllFoodItemReviewsWithinMonth
 };
