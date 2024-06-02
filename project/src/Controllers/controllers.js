@@ -352,7 +352,31 @@ const saveEstablishmentReview = async (req, res) => {
         });
 }
 
+const getFoodEstablishmentName = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const reviewsQuery = 
+        'SELECT name FROM food_establishment WHERE establishment_id = ?';
+        const [rows] = await pool.query(reviewsQuery, [id]);
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error fetching establishment name:', error.stack);
+        res.status(500).send('Error fetching establishment name: ' + error.message);
+    }
+};
 
+const deleteEstablishmentReviews = async (req, res) => {
+    const { Establishment_id } = req.body;
+    const sql = `DELETE FROM USER_REVIEWS_FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+    pool.query(sql, [Establishment_id])
+        .then((result) => {
+            res.status(200).json({ success: `Reviews deleted successfully!` });
+        })
+        .catch((error) => {
+            console.error('Error deleting establishment reviews:', error.stack);
+            res.status(500).send('Error deleting establishment reviews');
+        });
+}
 
 
 
@@ -368,5 +392,7 @@ export {
     updateEstablishment,
     getEstablishment,
     searchEstablishmentByName,
-    saveEstablishmentReview
+    saveEstablishmentReview,
+    getFoodEstablishmentName,
+    deleteEstablishmentReviews
 };
