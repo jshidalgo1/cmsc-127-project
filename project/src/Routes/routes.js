@@ -11,7 +11,10 @@ import {
     getEstablishment,
     searchEstablishmentByName,
     getFoodItemsByEstablishmentId,
-    saveEstablishmentReview
+    saveEstablishmentReview,
+    getAllFoodItemsOrderedByEstablishmentName,
+    getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
+    getAllFoodItemsOrderedByEstablishmentNameAndPrice,
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
