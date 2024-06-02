@@ -339,6 +339,18 @@ const searchEstablishmentByName = async (req, res) => {
     }
 };
 
+const saveEstablishmentReview = async (req, res) => {
+    const { Username, Establishment_id, Review, Rating } = req.body;
+    const sql = `INSERT INTO USER_REVIEWS_FOOD_ESTABLISHMENT (Username, Establishment_id, review, Rating, Review_date_time) VALUES (?, ?, ?, ?, NOW())`;
+    pool.query(sql, [Username, Establishment_id, Review, Rating])
+        .then((result) => {
+            res.status(200).json({ success: `Review added successfully!` });
+        })
+        .catch((error) => {
+            console.error('Error saving establishment review:', error.stack);
+            res.status(500).send('Error saving establishment review');
+        });
+}
 
 
 
@@ -355,5 +367,6 @@ export {
     deleteEstablishment,
     updateEstablishment,
     getEstablishment,
-    searchEstablishmentByName
+    searchEstablishmentByName,
+    saveEstablishmentReview
 };
