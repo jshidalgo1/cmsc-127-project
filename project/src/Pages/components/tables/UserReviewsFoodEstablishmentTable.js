@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import "../../styles/DatabaseTable.css";
+import "../../styles/FoodEstablishmentsTable.css";
 
 const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate }) => {
     const [estNames, setEstNames] = useState({});
@@ -22,6 +22,9 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate }) => {
         onDelete(establishmentId);
     };
 
+    const handleUpdate = (review) => {
+        onUpdate(review);
+    };
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString(undefined, options);
@@ -52,8 +55,11 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate }) => {
                                 <td>{ithRow.review}</td>
                                 <td>{ithRow.Rating}</td>
                                 <td>
-                                {/*  <button onClick={() => handleUpdate(ithRow)}>Update</button> {""} */}
-                                    <button onClick={() => handleDelete(ithRow.Establishment_id)}>Delete</button></td>
+                                    <div className = "action-buttons">
+                                    <button className="action-button" onClick={() => handleUpdate(ithRow)}>Update</button> {""}
+                                    <button className = "action-button" onClick={() => handleDelete(ithRow.Establishment_id)}>Delete</button>
+                                    </div>
+                                    </td>
                             </tr>
                         ))}
                     </tbody>

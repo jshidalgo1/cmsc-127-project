@@ -3,7 +3,7 @@ import mariadb from 'mariadb';
 const pool = mariadb.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'tiger', // TODO: change password of local mariadb
+    password: 'Napoli07!', // TODO: change password of local mariadb
     connectionLimit: 5,
     database: 'food_review_system'
 });

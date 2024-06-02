@@ -507,6 +507,26 @@ const deleteEstablishmentReviews = async (req, res) => {
         });
 }
 
+const updateEstablishmentReview = async (req, res) => {
+    
+}
+
+const getSpecificFoodEstablishmentReview = async (req, res) => {
+    const { establishment_id, username, review_date_time } = req.params;
+    const sql = `SELECT * FROM USER_REVIEWS_FOOD_ESTABLISHMENT WHERE Establishment_id = ? AND Username = ? AND review_date_time = ?`;
+    try {
+        const [review] = await pool.query(sql, [establishment_id, username, review_date_time]);
+
+        if (!review) {
+            return res.status(404).json({ error: 'Review not found' });
+        }
+
+        res.status(200).json(review);
+    } catch (error) {
+        console.error('Error fetching specific establishment review:', error.stack);
+        res.status(500).send('Error fetching specific establishment review: ' + error.message);
+    }
+    };
 
 
 export {
@@ -525,8 +545,10 @@ export {
     getFoodEstablishmentName,
     deleteEstablishmentReviews,
     getFoodItemsByEstablishmentId,
-    saveEstablishmentReview,
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,
+    getSpecificFoodEstablishmentReview,
+    updateEstablishmentReview,
+
 };

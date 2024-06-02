@@ -6,7 +6,7 @@ import UserReviewsFoodItemTable from "./components/tables/UserReviewsFoodItemTab
 import Modal from "./components/Modal.js";
 import EstablishmentFormReview from "./components/UserEstablishmentReviewForm.js";
 import UserContext from "../Routes/UserContext.js";
-
+import "./styles/EstablishmentReviewForm.css";
 function UserReviewsPage() {
     const { user } = useContext(UserContext);
     const [establishmentReviews, setEstablishmentReviews] = useState([]);
@@ -89,19 +89,19 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
     }
   };
 
-  //TODO
-//   const handleUpdateReviewEstablishment = async (establishment) => {
-//     try {
-        
-//       const response = await axios.get(`http://localhost:3001/getEstablishmentReview/${establishment.Establishment_id}`);
-//       console.log('Fetched establishment data:', response.data); // Log the response data
-//       setEditingEstablishment(response.data); // Assuming response.data contains the establishment details
-//       setShowModal(true);
-//     } catch (error) {
-//       console.error('Error fetching establishment details:', error);
-//       alert("Failed to fetch establishment details. Please try again.");
-//     }
-//   };
+  
+  const handleUpdateReviewEstablishment = async (establishmentReview) => {
+    
+    try {
+        const response = await axios.get(`http://localhost:3001/getFoodEstablishmentReview/${establishmentReview.Establishment_id}/${establishmentReview.Username}/${establishmentReview.Review_date_time}`);
+      console.log('Fetched establishment data:', response.data); // Log the response data
+      setEditingEstablishmentReview(response.data); // Assuming response.data contains the establishment details
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error fetching establishment details:', error);
+      alert("Failed to fetch establishment details. Please try again.");
+    }
+  };
 
 //   const handleDeleteReviewFoodItem = async (Establishment_id) => {
 //     try {
@@ -139,7 +139,7 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
                 <button className="add-new-establishment-button" onClick={handleAddEstablishmentReviewClick}>
                     <span className="plus-sign">+</span> Add New Food Establishment Review
                 </button>
-                <UserReviewsFoodEstablishmentTable data={establishmentReviews} onDelete={handleDeleteReviewEstablishment} />
+                <UserReviewsFoodEstablishmentTable data={establishmentReviews} onDelete={handleDeleteReviewEstablishment} onUpdate={handleUpdateReviewEstablishment} />
 
                 <h2>Food Item Reviews</h2>
                 <button className="add-new-establishment-button">
