@@ -114,3 +114,16 @@
     color: #ff3044;
     background-color: #ffc5ca;
 }
+
+.search-container {
+    margin: 10px 0;
+}
+
+.search-container input[type="text"] {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 300px;
+    margin-right: 10px;
+}
