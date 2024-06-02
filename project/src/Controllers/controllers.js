@@ -56,7 +56,7 @@ const getFoodEstablishments = async (req, res) => {
             return {
                 ...est,
                 links: estLinks,
-                contact_nos: estContactNos
+                Contact_no: estContactNos
             };
         });
 
@@ -307,7 +307,7 @@ const searchEstablishmentByName = async (req, res) => {
             Description, 
             Address, 
             COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
-            COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS contact_nos
+            COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
         FROM 
             FOOD_ESTABLISHMENT 
             LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
@@ -328,7 +328,7 @@ const searchEstablishmentByName = async (req, res) => {
             Address: establishmentResult.Address,
             Type: establishmentResult.Type,
             links: establishmentResult.links ? establishmentResult.links.split(',') : [],
-            contact_nos: establishmentResult.contact_nos ? establishmentResult.contact_nos.split(',') : []
+            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
         }));
 
         console.log('searchEstablishmentByName Result:', establishments);
