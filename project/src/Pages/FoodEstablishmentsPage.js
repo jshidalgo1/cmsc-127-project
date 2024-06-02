@@ -30,6 +30,8 @@ function FoodEstablishmentsPage() {
 
       setEstablishments(response.data);
 
+      // console.log('Establishment:', response.data);
+
     } catch (error) {
       console.error('Error fetching establishments:', error);
     }
@@ -133,6 +135,7 @@ function FoodEstablishmentsPage() {
 
         <div className="inventory-header">
           <div className="left-inventory-header">
+
             <h2>Establishments</h2>
 
             <div className="search-container">
@@ -143,6 +146,7 @@ function FoodEstablishmentsPage() {
                 placeholder="Search by name..."
               />
             </div>
+
           </div>
 
           <button className="add-new-establishment-button" onClick={handleAddEstablishmentClick}>

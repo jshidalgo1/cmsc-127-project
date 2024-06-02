@@ -341,6 +341,89 @@ const searchEstablishmentByName = async (req, res) => {
 
 
 
+// Search Establishment by Name
+const getEstablishmentById = async (req, res) => {
+    const { id } = req.query;
+    const sql = `SELECT * FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+    try {
+        const establishment = await pool.query(sql, [id]);
+
+        console.log('Search Establishment By Name Result:', establishment);
+        res.status(200).json(establishment);
+    } catch (error) {
+        console.error('Error getting establishments by id:', error.stack);
+        res.status(500).send('Error getting establishments by id');
+    }
+};
+
+// const getFoodItemsByEstablishmentId = async (req, res) => {
+//     const { id } = req.query;
+
+//     const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ?`;
+
+//     try {
+//         const items = await pool.query(sql, [id]);
+
+//         console.log('Search Establishment By Name Result:', items);
+//         res.status(200).json(items);
+//     } catch (error) {
+//         console.error('Error getting establishments by id:', error.stack);
+//         res.status(500).send('Error getting establishments by id');
+//     }
+// }
+
+const getFoodItemsByEstablishmentId = async (req, res) => {
+    const { id } = req.query;
+
+    const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ?`;
+
+    // const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
+    // const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
+
+    try {
+        const items = await pool.query(sql, [id]);
+        // const links = await pool.query(linksSql);
+        // const contactNos = await pool.query(contactNosSql);
+
+        // const combinedData = establishments.map(est => {
+        // const estLinks = links
+        //     .filter(link => link.Establishment_id === est.Establishment_id)
+        //     .map(link => link.links);
+        // const estContactNos = contactNos
+        //     .filter(contactNo => contactNo.Establishment_id === est.Establishment_id)
+        //     .map(contactNo => contactNo.Contact_no);
+
+        // return {
+        //     items
+        //     // ...est,
+        //     // links: estLinks,
+        //     // contact_nos: estContactNos
+        // };
+        // });
+
+        res.status(200).json(items);
+        // const establishments = establishmentsResult.rows.map(est => {
+        //     const links = linksResult.rows
+        //         .filter(link => link.establishment_id === est.establishment_id)
+        //         .map(link => link.link);
+        //     const contactNos = contactNosResult.rows
+        //         .filter(contactNo => contactNo.establishment_id === est.establishment_id)
+        //         .map(contactNo => contactNo.contact_no);
+
+        //     return {
+        //         ...est,
+        //         links,
+        //         contact_nos: contactNos
+        //     };
+        // });
+        // console.log(establishments);
+        // res.status(200).json(establishments);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query');
+    }
+}
+
 
 
 
@@ -355,5 +438,6 @@ export {
     deleteEstablishment,
     updateEstablishment,
     getEstablishment,
-    searchEstablishmentByName
+    searchEstablishmentByName,
+    getFoodItemsByEstablishmentId
 };

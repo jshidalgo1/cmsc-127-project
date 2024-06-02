@@ -9,7 +9,8 @@ import {
     deleteEstablishment,
     updateEstablishment,
     getEstablishment,
-    searchEstablishmentByName
+    searchEstablishmentByName,
+    getFoodItemsByEstablishmentId
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
@@ -24,6 +25,7 @@ const setUpRoutes = (app) => {
     app.put('/updateEstablishment', updateEstablishment);
     app.get('/getEstablishment/:id', getEstablishment);
     app.get("/searchEstablishments", searchEstablishmentByName);
+    app.get("/getFoodItemsByEstablishmentId/:id", getFoodItemsByEstablishmentId);
 
 }
 

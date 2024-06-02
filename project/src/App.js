@@ -4,6 +4,7 @@ import HomePage from './Pages/HomePage.js';
 import SignUpPage from './Pages/SignUpPage.js';
 import UserFeedPage from './Pages/UserFeedPage.js';
 import FoodEstablishmentsPage from './Pages/FoodEstablishmentsPage.js';
+import FoodEstablishmentPage from './Pages/FoodEstablishmentPage.js';
 import FoodItemsPage from './Pages/FoodItemsPage.js';
 import UserReviewsPage from './Pages/UserReviewsPage.js';
 import UserProfilePage from './Pages/UserProfilePage.js';
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/user-feed" element={<UserFeedPage />} />
           <Route path="/food-establishments" element={<FoodEstablishmentsPage />} />
+          <Route path="/food-establishment/:id" element={<FoodEstablishmentPage />} />
           <Route path="/food-items" element={<FoodItemsPage />} />
           <Route path="/user-reviews" element={<UserReviewsPage />} />
           <Route path="/profile" element={<UserProfilePage />} />

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import { FoodEstablishmentLinks, FoodEstablishmentContactNo } from "./FoodEstablishmentHelperComponents.js";
 import "../styles/FoodEstablishmentsTable.css";
 
@@ -39,9 +40,10 @@ const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
                                     <FoodEstablishmentLinks data={est.links} />
                                 </td>
                                 <td>
-                                    <FoodEstablishmentContactNo data={est.contact_nos} />
+                                    <FoodEstablishmentContactNo data={est.Contact_no} />
                                 </td>
                                 <td>
+                                    <button><Link to={{ pathname: `/food-establishment/${est.Establishment_id}` }}>View</Link></button> {""}
                                     <button onClick={() => handleUpdate(est)}>Update</button> {""}
                                     <button onClick={() => handleDelete(est.Establishment_id)}>Delete</button>
                                 </td>
