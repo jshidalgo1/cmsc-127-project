@@ -694,5 +694,7 @@ export {
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,
     getAllFoodEstablishmentReviewsWithinMonth,
-    getAllFoodItemReviewsWithinMonth
+    getAllFoodItemReviewsWithinMonth,
+    getSpecificFoodEstablishmentReview,
+    updateEstablishmentReview
 };
