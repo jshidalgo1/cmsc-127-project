@@ -65,9 +65,9 @@ const setUpDatabase = async () => {
         await pool.query(`CREATE TABLE IF NOT EXISTS FOOD_ITEM (
             Item_id INT PRIMARY KEY AUTO_INCREMENT,
             Name VARCHAR(100),
-            Description TEXT,
-            Price DECIMAL(10,2),
             Food_type VARCHAR(50),
+            Price DECIMAL(10,2),
+            Description TEXT,
             Establishment_id INT,
             CONSTRAINT fk_food_item_establishment FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id) ON DELETE CASCADE
         );`);
