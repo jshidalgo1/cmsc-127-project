@@ -4,6 +4,7 @@ import '../styles/EstablishmentReviewForm.css';
 
 const EstablishmentFormReview = ({ establishment, onSave }) => {
     const [estName, setEstName] = useState(establishment ? establishment.Name : '');
+    const [estId, setEstId] = useState(establishment ? establishment.Establishment_id : null);
     const [review, setReview] = useState('');
     const [rating, setRating] = useState('');
     const [establishments, setEstablishments] = useState([]);
@@ -12,7 +13,10 @@ const EstablishmentFormReview = ({ establishment, onSave }) => {
         const fetchEstablishments = async () => {
             const response = await axios.post('http://localhost:3001/getFoodEstablishments');
             setEstablishments(response.data);
-            console.log('hello');
+            if (response.data.length > 0) {
+                setEstName(response.data[0].Name);
+                setEstId(response.data[0].Establishment_id);
+            }
         };
 
         fetchEstablishments();
@@ -22,7 +26,7 @@ const EstablishmentFormReview = ({ establishment, onSave }) => {
         e.preventDefault();
 
         const updatedEstablishmentReview = {
-            Establishment_id: establishment ? establishment.Establishment_id : null,
+            Establishment_id: estId,
             Name: estName,
             Review: review,
             Rating: rating,
@@ -30,6 +34,14 @@ const EstablishmentFormReview = ({ establishment, onSave }) => {
 
         onSave(updatedEstablishmentReview);
     };
+
+    const handleEstablishmentChange = (e) => {
+        const selectedEstablishment = establishments.find(est => est.Name === e.target.value);
+        setEstName(selectedEstablishment.Name);
+        setEstId(selectedEstablishment.Establishment_id);
+        console.log(selectedEstablishment.Establishment_id);
+        
+    }
 
     return (
         <div className="establishment-form">
@@ -40,7 +52,7 @@ const EstablishmentFormReview = ({ establishment, onSave }) => {
                     {establishments.length > 0 ? (
                         <select
                         value={estName}
-                        onChange={(e) => setEstName(e.target.value)}
+                        onChange={handleEstablishmentChange}
                         required
                         >
                         {establishments.map((est) => (

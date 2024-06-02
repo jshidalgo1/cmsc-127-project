@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 import Navbar from "./components/Navbar.js";
 import UserReviewsFoodEstablishmentTable from "./components/tables/UserReviewsFoodEstablishmentTable.js";
 import UserReviewsFoodItemTable from "./components/tables/UserReviewsFoodItemTable.js";
 import Modal from "./components/Modal.js";
 import EstablishmentFormReview from "./components/UserEstablishmentReviewForm.js";
+import UserContext from "../Routes/UserContext.js";
 
 function UserReviewsPage() {
-    const [user] = useState(null); // Assuming user state is not being used for now
+    const { user } = useContext(UserContext);
     const [establishmentReviews, setEstablishmentReviews] = useState([]);
     const [itemReviews, setItemReviews] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [editingEstablishmentReview, setEditingEstablishmentReview] = useState(null);
+    
+    const fetchEstablishmentReviews = async () => {
+            
+        try {
+            const response = await axios.get('http://localhost:3001/getFoodEstablishmentReviews');
+            setEstablishmentReviews(response.data);
+        } catch (error) {
+            console.error('Error fetching establishment reviews:', error);
+        }
+    };
 
     useEffect(() => {
-        const fetchEstablishmentReviews = async () => {
-            try {
-                const response = await axios.get('http://localhost:3001/getFoodEstablishmentReviews');
-                setEstablishmentReviews(response.data);
-            } catch (error) {
-                console.error('Error fetching establishment reviews:', error);
-            }
-        };
-
         const fetchItemReviews = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/getFoodReviews');
@@ -48,7 +50,9 @@ function UserReviewsPage() {
 
     // Function to save the establishment review
     const handleSaveEstablishmentReview = async (reviewData) => {
-    try {
+    reviewData.Username = user.Username;
+    console.log(reviewData)
+        try {
         // Send the review data to the server
         const response = await axios.post('http://localhost:3001/saveEstablishmentReview', reviewData);
 
@@ -62,6 +66,8 @@ function UserReviewsPage() {
 
     // Close the modal
     setShowModal(false);
+
+    fetchEstablishmentReviews();
 };
 
     return (
