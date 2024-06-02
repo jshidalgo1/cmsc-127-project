@@ -6,13 +6,15 @@ import UserReviewsFoodItemTable from "./components/tables/UserReviewsFoodItemTab
 import Modal from "./components/Modal.js";
 import EstablishmentFormReview from "./components/UserEstablishmentReviewForm.js";
 import UserContext from "../Routes/UserContext.js";
-import "./styles/EstablishmentReviewForm.css";
+
 function UserReviewsPage() {
     const { user } = useContext(UserContext);
     const [establishmentReviews, setEstablishmentReviews] = useState([]);
     const [itemReviews, setItemReviews] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [editingEstablishmentReview, setEditingEstablishmentReview] = useState(null);
+    const [establishmentreviewsWithinMonthFetched, setestablishmentReviewsWithinMonthFetched] = useState(false);
+    const [establishmentItemWithinMonthFetched, setestablishmentItemWithinMonthFetched] = useState(false);
     
     const fetchEstablishmentReviews = async () => {
             
@@ -21,6 +23,26 @@ function UserReviewsPage() {
             setEstablishmentReviews(response.data);
         } catch (error) {
             console.error('Error fetching establishment reviews:', error);
+        }
+    };
+
+    const fetchAllFoodEstablishmentReviewsWithinMonth = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/getAllFoodEstablishmentReviewsWithinMonth');
+            setEstablishmentReviews(response.data);
+            setestablishmentReviewsWithinMonthFetched(true);
+        } catch (error) {
+            console.error('Error fetching reviews within the last month:', error);
+        }
+    };
+
+    const fetchAllFoodItemReviewsWithinMonth = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/getAllFoodItemReviewsWithinMonth');
+            setItemReviews(response.data);
+            setestablishmentItemWithinMonthFetched(true);
+        } catch (error) {
+            console.error('Error fetching item reviews within the last month:', error);
         }
     };
 
@@ -89,19 +111,19 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
     }
   };
 
-  
-  const handleUpdateReviewEstablishment = async (establishmentReview) => {
-    
-    try {
-        const response = await axios.get(`http://localhost:3001/getFoodEstablishmentReview/${establishmentReview.Establishment_id}/${establishmentReview.Username}/${establishmentReview.Review_date_time}`);
-      console.log('Fetched establishment data:', response.data); // Log the response data
-      setEditingEstablishmentReview(response.data); // Assuming response.data contains the establishment details
-      setShowModal(true);
-    } catch (error) {
-      console.error('Error fetching establishment details:', error);
-      alert("Failed to fetch establishment details. Please try again.");
-    }
-  };
+  //TODO
+//   const handleUpdateReviewEstablishment = async (establishment) => {
+//     try {
+        
+//       const response = await axios.get(`http://localhost:3001/getEstablishmentReview/${establishment.Establishment_id}`);
+//       console.log('Fetched establishment data:', response.data); // Log the response data
+//       setEditingEstablishment(response.data); // Assuming response.data contains the establishment details
+//       setShowModal(true);
+//     } catch (error) {
+//       console.error('Error fetching establishment details:', error);
+//       alert("Failed to fetch establishment details. Please try again.");
+//     }
+//   };
 
 //   const handleDeleteReviewFoodItem = async (Establishment_id) => {
 //     try {
@@ -139,13 +161,27 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
                 <button className="add-new-establishment-button" onClick={handleAddEstablishmentReviewClick}>
                     <span className="plus-sign">+</span> Add New Food Establishment Review
                 </button>
-                <UserReviewsFoodEstablishmentTable data={establishmentReviews} onDelete={handleDeleteReviewEstablishment} onUpdate={handleUpdateReviewEstablishment} />
+                <button onClick={fetchAllFoodEstablishmentReviewsWithinMonth}>
+                    Get Food Establishment Reviews Within Last Month
+                </button>
+                <UserReviewsFoodEstablishmentTable 
+                data={establishmentReviews} 
+                onDelete={handleDeleteReviewEstablishment}
+                showEstablishmentName={establishmentreviewsWithinMonthFetched} 
+                />
 
                 <h2>Food Item Reviews</h2>
                 <button className="add-new-establishment-button">
                     <span className="plus-sign">+</span> Add New Food Item Review
                 </button>
-                {/* <UserReviewsFoodItemTable data={itemReviews} onDelete={handleDeleteReviewFoodItem} onUpdate={handleUpdateReviewFoodItem} /> */}
+                <button onClick={fetchAllFoodItemReviewsWithinMonth}>
+                    Get Food Item Reviews Within Last Month
+                </button>
+                <UserReviewsFoodItemTable 
+                data={itemReviews}
+                showItemName={establishmentItemWithinMonthFetched}
+                />
+               
 
             </div>
 
