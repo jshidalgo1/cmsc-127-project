@@ -56,7 +56,7 @@ const getFoodEstablishments = async (req, res) => {
             return {
                 ...est,
                 links: estLinks,
-                contact_nos: estContactNos
+                Contact_no: estContactNos
             };
         });
 
@@ -307,7 +307,7 @@ const searchEstablishmentByName = async (req, res) => {
             Description, 
             Address, 
             COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
-            COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS contact_nos
+            COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
         FROM 
             FOOD_ESTABLISHMENT 
             LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
@@ -328,7 +328,7 @@ const searchEstablishmentByName = async (req, res) => {
             Address: establishmentResult.Address,
             Type: establishmentResult.Type,
             links: establishmentResult.links ? establishmentResult.links.split(',') : [],
-            contact_nos: establishmentResult.contact_nos ? establishmentResult.contact_nos.split(',') : []
+            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
         }));
 
         console.log('searchEstablishmentByName Result:', establishments);
@@ -352,6 +352,33 @@ const saveEstablishmentReview = async (req, res) => {
         });
 }
 
+// Search Establishment by Name
+const getEstablishmentById = async (req, res) => {
+    const { id } = req.query;
+    const sql = `SELECT * FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+    try {
+        const establishment = await pool.query(sql, [id]);
+
+        console.log('Search Establishment By Name Result:', establishment);
+        res.status(200).json(establishment);
+    } catch (error) {
+        console.error('Error getting establishments by id:', error.stack);
+        res.status(500).send('Error getting establishments by id');
+    }
+};
+
+
+const getFoodItemsByEstablishmentId = async (req, res) => {
+    const { id } = req.query;
+    const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ?`;
+    try {
+        const items = await pool.query(sql, [id]);
+        res.status(200).json(items);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query');
+    }
+}
 const getAllFoodItemsOrderedByEstablishmentName = async (req, res) => {
     const sql = `
         SELECT fi.*, fe.Name as EstablishmentName
@@ -469,6 +496,7 @@ export {
     updateEstablishment,
     getEstablishment,
     searchEstablishmentByName,
+    getFoodItemsByEstablishmentId,
     saveEstablishmentReview,
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
