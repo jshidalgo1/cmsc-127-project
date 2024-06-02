@@ -30,6 +30,8 @@ function FoodEstablishmentsPage() {
 
       setEstablishments(response.data);
 
+      // console.log('Establishment:', response.data);
+
     } catch (error) {
       console.error('Error fetching establishments:', error);
     }
@@ -84,7 +86,7 @@ function FoodEstablishmentsPage() {
   };
 
   // Function to handle the deletion of an establishment
-  const handleDeleteProduct = async (Establishment_id) => {
+  const handleDeleteEstablishment = async (Establishment_id) => {
     try {
       console.log("Establishment id: ", Establishment_id);
 
@@ -133,6 +135,7 @@ function FoodEstablishmentsPage() {
 
         <div className="inventory-header">
           <div className="left-inventory-header">
+
             <h2>Establishments</h2>
 
             <div className="search-container">
@@ -143,6 +146,7 @@ function FoodEstablishmentsPage() {
                 placeholder="Search by name..."
               />
             </div>
+
           </div>
 
           <button className="add-new-establishment-button" onClick={handleAddEstablishmentClick}>
@@ -150,7 +154,7 @@ function FoodEstablishmentsPage() {
           </button>
         </div>
 
-        <FoodEstablishments data={establishments} onDelete={handleDeleteProduct} onUpdate={handleUpdateEstablishment} /> {/* Pass FOOD_ESTABLISHMENT data here */}
+        <FoodEstablishments data={establishments} onDelete={handleDeleteEstablishment} onUpdate={handleUpdateEstablishment} /> {/* Pass FOOD_ESTABLISHMENT data here */}
 
 
         <Modal show={showModal} onClose={handleCloseModal}>
