@@ -91,9 +91,9 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
 
   
   const handleUpdateReviewEstablishment = async (establishmentReview) => {
-    
+    console.log(establishmentReview);
     try {
-        const response = await axios.get(`http://localhost:3001/getFoodEstablishmentReview/${establishmentReview.Establishment_id}/${establishmentReview.Username}/${establishmentReview.Review_date_time}`);
+        const response = await axios.get(`http://localhost:3001/getFoodEstablishmentReview/${establishmentReview.Establishment_id}/${establishmentReview.Username}`);
       console.log('Fetched establishment data:', response.data); // Log the response data
       setEditingEstablishmentReview(response.data); // Assuming response.data contains the establishment details
       setShowModal(true);

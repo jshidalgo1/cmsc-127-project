@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/EstablishmentReviewForm.css';
 
-const EstablishmentFormReview = ({ establishment, onSave }) => {
-    const [estName, setEstName] = useState(establishment ? establishment.Name : '');
-    const [estId, setEstId] = useState(establishment ? establishment.Establishment_id : null);
+const EstablishmentFormReview = ({ establishment: establishmentReview, onSave }) => {
+    const [estName, setEstName] = useState(establishmentReview ? establishmentReview.Name : '');
+    const [estId, setEstId] = useState(establishmentReview ? establishmentReview.Establishment_id : null);
     const [review, setReview] = useState('');
     const [rating, setRating] = useState('');
     const [establishments, setEstablishments] = useState([]);
@@ -45,7 +45,7 @@ const EstablishmentFormReview = ({ establishment, onSave }) => {
 
     return (
         <div className="establishment-form">
-            <h2>{establishment ? 'Edit Establishment Review' : 'Add Establishment Review'}</h2>
+            <h2>{establishmentReview ? 'Edit Establishment Review' : 'Add Establishment Review'}</h2>
             <form onSubmit={handleFormSubmit}>
                 <div>
                     <label>Establishment to be reviewed:</label>
@@ -84,7 +84,7 @@ const EstablishmentFormReview = ({ establishment, onSave }) => {
                     />
                 </div>
                 <button type="submit">
-                    {establishment ? 'Edit Review' : 'Add Review'}
+                    {establishmentReview ? 'Edit Review' : 'Add Review'}
                 </button>
             </form>
         </div>

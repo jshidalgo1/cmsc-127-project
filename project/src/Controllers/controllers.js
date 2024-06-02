@@ -512,14 +512,15 @@ const updateEstablishmentReview = async (req, res) => {
 }
 
 const getSpecificFoodEstablishmentReview = async (req, res) => {
-    const { establishment_id, username, review_date_time } = req.params;
-    const sql = `SELECT * FROM USER_REVIEWS_FOOD_ESTABLISHMENT WHERE Establishment_id = ? AND Username = ? AND review_date_time = ?`;
+    const { id, username } = req.params;
+    console.log(id, username)
+    const sql = `SELECT USER_REVIEWS_FOOD_ESTABLISHMENT.*, FOOD_ESTABLISHMENT.name 
+    FROM USER_REVIEWS_FOOD_ESTABLISHMENT 
+    INNER JOIN FOOD_ESTABLISHMENT 
+    ON USER_REVIEWS_FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT.Establishment_id 
+    WHERE USER_REVIEWS_FOOD_ESTABLISHMENT.Establishment_id = ? AND USER_REVIEWS_FOOD_ESTABLISHMENT.Username = ?`;
     try {
-        const [review] = await pool.query(sql, [establishment_id, username, review_date_time]);
-
-        if (!review) {
-            return res.status(404).json({ error: 'Review not found' });
-        }
+        const [review] = await pool.query(sql, [id, username]);
 
         res.status(200).json(review);
     } catch (error) {
