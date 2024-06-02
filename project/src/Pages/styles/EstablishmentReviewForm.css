@@ -1,0 +1,103 @@
+.establishment-form {
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff7e3;
+    border: 1px solid #40792d;
+    border-radius: 10px;
+}
+
+.establishment-form h2 {
+    margin-bottom: 20px;
+}
+
+/* Form Elements */
+.establishment-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Form Elements */
+.establishment-form input,
+.establishment-form textarea {
+    width: calc(100%);
+    padding: 8px 9px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+
+.establishment-form input,
+.establishment-form textarea {
+    width: calc(100% - 18px);
+}
+
+.establishment-form button {
+    background-color: #4CAF50;
+    width: 100%;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.establishment-form button:hover {
+    background-color: #45a049;
+}
+
+
+.input-with-icons {
+    position: relative;
+}
+
+.input-with-icons .plus-icon,
+.input-with-icons .minus-icon {
+    position: absolute;
+    top: 30%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #4CAF50;
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+.input-with-icons .plus-icon {
+    right: 10px;
+}
+
+.input-with-icons .minus-icon {
+    right: 30px;
+}
+
+.add-new-establishment-button {
+    background-color: #45a049;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 19px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.add-new-establishment-button:hover {
+    background-color: #2f7833;
+}
+
+.plus-sign {
+    font-size: 30px;
+    margin-right: 5px;
+}

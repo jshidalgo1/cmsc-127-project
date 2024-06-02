@@ -61,22 +61,6 @@ const getFoodEstablishments = async (req, res) => {
         });
 
         res.status(200).json(combinedData);
-        // const establishments = establishmentsResult.rows.map(est => {
-        //     const links = linksResult.rows
-        //         .filter(link => link.establishment_id === est.establishment_id)
-        //         .map(link => link.link);
-        //     const contactNos = contactNosResult.rows
-        //         .filter(contactNo => contactNo.establishment_id === est.establishment_id)
-        //         .map(contactNo => contactNo.contact_no);
-
-        //     return {
-        //         ...est,
-        //         links,
-        //         contact_nos: contactNos
-        //     };
-        // });
-        // console.log(establishments);
-        // res.status(200).json(establishments);
     } catch (error) {
         console.error('Error executing query', error.stack);
         res.status(500).send('Error executing query');
