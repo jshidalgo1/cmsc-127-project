@@ -17,6 +17,7 @@ import {
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,
+    addFoodItemFromEstablishment,
     getAllFoodEstablishmentReviewsWithinMonth,
     getAllFoodItemReviewsWithinMonth
 } from '../Controllers/controllers.js';
@@ -33,13 +34,14 @@ const setUpRoutes = (app) => {
     app.put('/updateEstablishment', updateEstablishment);
     app.get('/getEstablishment/:id', getEstablishment);
     app.get("/searchEstablishments", searchEstablishmentByName);
-    app.get("/getFoodItemsByEstablishmentId/:id", getFoodItemsByEstablishmentId);
+    app.get('/getFoodItemsByEstablishmentId/:establishmentId', getFoodItemsByEstablishmentId);
     app.post('/saveEstablishmentReview', saveEstablishmentReview);
     app.get('/getFoodEstablishmentName/:id', getFoodEstablishmentName);
     app.delete('/deleteEstablishmentReviews', deleteEstablishmentReviews);
     app.post('/getAllFoodItemsOrderedByEstablishmentName', getAllFoodItemsOrderedByEstablishmentName);
     app.post('/getAllFoodItemsOrderedByEstablishmentNameAndFoodType', getAllFoodItemsOrderedByEstablishmentNameAndFoodType);
     app.post('/getAllFoodItemsOrderedByEstablishmentNameAndPrice', getAllFoodItemsOrderedByEstablishmentNameAndPrice);
+    app.post('/addFoodItemFromEstablishment', addFoodItemFromEstablishment);
     app.get('/getAllFoodEstablishmentReviewsWithinMonth', getAllFoodEstablishmentReviewsWithinMonth);
     app.get('/getAllFoodItemReviewsWithinMonth', getAllFoodItemReviewsWithinMonth);
 

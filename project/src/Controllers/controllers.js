@@ -355,8 +355,8 @@ const saveEstablishmentReview = async (req, res) => {
 const getFoodEstablishmentName = async (req, res) => {
     try {
         const { id } = req.params;
-        const reviewsQuery = 
-        'SELECT name FROM food_establishment WHERE establishment_id = ?';
+        const reviewsQuery =
+            'SELECT name FROM food_establishment WHERE establishment_id = ?';
         const [rows] = await pool.query(reviewsQuery, [id]);
         res.status(200).json(rows);
     } catch (error) {
@@ -365,7 +365,7 @@ const getFoodEstablishmentName = async (req, res) => {
     }
 }
 
-        // Search Establishment by Name
+// Search Establishment by Name
 const getEstablishmentById = async (req, res) => {
     const { id } = req.query;
     const sql = `SELECT * FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
@@ -382,16 +382,91 @@ const getEstablishmentById = async (req, res) => {
 
 
 const getFoodItemsByEstablishmentId = async (req, res) => {
-    const { id } = req.query;
+    const { establishmentId } = req.params;
+    console.log('getFoodItemsByEstablishmentId called with establishmentId:', establishmentId);
+
     const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ?`;
+
     try {
-        const items = await pool.query(sql, [id]);
-        res.status(200).json(items);
+        const result = await pool.query(sql, [establishmentId]);
+        console.log('getFoodItemsByEstablishmentId result:', result);
+        res.status(200).send(result);
     } catch (error) {
-        console.error('Error executing query', error.stack);
-        res.status(500).send('Error executing query');
+        console.error('Error fetching food items by establishment ID:', error.stack);
+        res.status(500).send('Error fetching food items by establishment ID: ' + error.message);
     }
-}
+};
+
+const addFoodItemFromEstablishment = async (req, res) => {
+    const { establishmentId, itemName, description, price, category } = req.body;
+
+    const sql = `INSERT INTO FOOD_ITEM (Establishment_id, Item_name, Description, Price, Category) 
+                 VALUES (?, ?, ?, ?, ?)`;
+
+    try {
+        await pool.query(sql, [establishmentId, itemName, description, price, category]);
+        res.status(200).json({ success: "Food item added successfully!" });
+    } catch (error) {
+        console.error('Error adding food item:', error.stack);
+        res.status(500).send('Error adding food item: ' + error.message);
+    }
+};
+
+
+
+
+// // Get Establishment by Id
+// const getEstablishment = async (req, res) => {
+//     const { id } = req.params;
+//     try {
+//         const establishmentQuery = `
+//             SELECT 
+//                 FOOD_ESTABLISHMENT.Establishment_id, 
+//                 Name, 
+//                 Type, 
+//                 Description, 
+//                 Address, 
+//                 COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
+//                 COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
+//             FROM 
+//                 FOOD_ESTABLISHMENT 
+//                 LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
+//                 LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_CONTACT_NO.Establishment_id
+//             WHERE 
+//                 FOOD_ESTABLISHMENT.Establishment_id = ?`;
+
+//         // SELECT * FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+//         const [establishmentResult] = await pool.query(establishmentQuery, [id]);
+
+
+//         if (!establishmentResult) {
+//             return res.status(404).json({ error: 'Establishment not found' });
+//         }
+
+//         const establishment = {
+//             Establishment_id: establishmentResult.Establishment_id,
+//             Name: establishmentResult.Name,
+//             Description: establishmentResult.Description,
+//             Address: establishmentResult.Address,
+//             Type: establishmentResult.Type,
+//             links: establishmentResult.links ? establishmentResult.links.split(',') : [],
+//             Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
+//         };
+
+//         // console.log('Establishment Query Result:', establishment); // Log the links query result
+
+//         res.status(200).json(establishment);
+//     } catch (error) {
+//         console.error('Error fetching establishment details:', error.stack);
+//         res.status(500).send('Error fetching establishment details: ' + error.message);
+//     }
+// };
+
+
+
+
+
+
 const getAllFoodItemsOrderedByEstablishmentName = async (req, res) => {
     const sql = `
         SELECT fi.*, fe.Name as EstablishmentName
@@ -591,6 +666,7 @@ export {
     searchEstablishmentByName,
     saveEstablishmentReview,
     getFoodEstablishmentName,
+    addFoodItemFromEstablishment,
     deleteEstablishmentReviews,
     getFoodItemsByEstablishmentId,
     getAllFoodItemsOrderedByEstablishmentName,

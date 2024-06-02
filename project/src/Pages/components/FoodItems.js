@@ -24,6 +24,7 @@ const FoodItems = ({ data, onDelete, onUpdate }) => {
                             <th>Price</th>
                             <th>Description</th>
                             <th>Establishment_id</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,11 +37,19 @@ const FoodItems = ({ data, onDelete, onUpdate }) => {
                                 <td>{item.Description}</td>
                                 <td>{item.Establishment_id}</td>
 
-
                                 <td>
-                                    <button><Link to={{ pathname: `/food-establishment/${item.Establishment_id}` }}>View</Link></button> {""}
-                                    <button onClick={() => handleUpdate(item)}>Update</button> {""}
-                                    <button onClick={() => handleDelete(item.Establishment_id)}>Delete</button>
+                                    {/* <button><Link to={{ pathname: `/food-establishment/${item.Establishment_id}` }}>View</Link></button> {""}
+                                    <button className="action-button" onClick={() => handleUpdate(item)}>Update</button> {""}
+                                    <button className="action-button" onClick={() => handleDelete(item.Establishment_id)}>Delete</button> */}
+                                    <div className="action-buttons">
+                                        <Link to={{ pathname: `/food-establishment/${item.Establishment_id}` }}>
+                                            <button className="action-button">View</button>
+                                        </Link>
+                                        {" "}
+                                        <button className="action-button" onClick={() => handleUpdate(item)}>Update</button>
+                                        {" "}
+                                        <button className="action-button" onClick={() => handleDelete(item.Establishment_id)}>Delete</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
