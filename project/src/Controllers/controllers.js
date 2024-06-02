@@ -400,7 +400,7 @@ const getFoodItemsByEstablishmentId = async (req, res) => {
 const addFoodItemFromEstablishment = async (req, res) => {
     const { establishmentId, itemName, description, price, category } = req.body;
 
-    const sql = `INSERT INTO FOOD_ITEM (Establishment_id, Item_name, Description, Price, Category) 
+    const sql = `INSERT INTO FOOD_ITEM (Establishment_id, name, Description, Price, food_type) 
                  VALUES (?, ?, ?, ?, ?)`;
 
     try {
@@ -583,7 +583,18 @@ const deleteEstablishmentReviews = async (req, res) => {
 }
 
 const updateEstablishmentReview = async (req, res) => {
-    
+    const { Establishment_id, Review, Rating } = req.body;
+    console.log(req.body);
+    const sql = `UPDATE USER_REVIEWS_FOOD_ESTABLISHMENT SET Review = ?, Rating = ?, review_date_time = NOW() WHERE Establishment_id = ?`;
+    pool.query(sql, [Review, Rating, Establishment_id])
+
+        .then((result) => {
+            res.status(200).json({ success: `Review updated successfully!` });
+        })
+        .catch((error) => {
+            console.error('Error updating establishment review:', error.stack);
+            res.status(500).send('Error updating establishment review');
+        });
 }
 
 const getSpecificFoodEstablishmentReview = async (req, res) => {

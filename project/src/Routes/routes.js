@@ -44,7 +44,7 @@ const setUpRoutes = (app) => {
     app.post('/getAllFoodItemsOrderedByEstablishmentNameAndFoodType', getAllFoodItemsOrderedByEstablishmentNameAndFoodType);
     app.post('/getAllFoodItemsOrderedByEstablishmentNameAndPrice', getAllFoodItemsOrderedByEstablishmentNameAndPrice);
     app.get('/getFoodEstablishmentReview/:id/:username', getSpecificFoodEstablishmentReview);
-    app.put('/updateEstablishmentReview', updateEstablishmentReview);
+    app.put('/updateEstablishmentReview/:id', updateEstablishmentReview);
     app.post('/addFoodItemFromEstablishment', addFoodItemFromEstablishment);
     app.get('/getAllFoodEstablishmentReviewsWithinMonth', getAllFoodEstablishmentReviewsWithinMonth);
     app.get('/getAllFoodItemReviewsWithinMonth', getAllFoodItemReviewsWithinMonth);

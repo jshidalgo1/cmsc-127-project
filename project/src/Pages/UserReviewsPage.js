@@ -71,15 +71,28 @@ function UserReviewsPage() {
     };
 
     // Function to save the establishment review
-    const handleSaveEstablishmentReview = async (reviewData) => {
+const handleSaveEstablishmentReview = async (reviewData) => {
     reviewData.Username = user.Username;
-        try {
-        // Send the review data to the server
-        const response = await axios.post('http://localhost:3001/saveEstablishmentReview', reviewData);
-
-        // If the request was successful, update the state with the new review
-        if (response.status === 200) {
-            setEstablishmentReviews([...establishmentReviews, response.data]);
+    try {
+        let response;
+        if (editingEstablishmentReview) {
+          console.log('Editing establishment review');
+            // Updating an existing review
+            response = await axios.put(`http://localhost:3001/updateEstablishmentReview/${reviewData.Establishment_id}`, reviewData);
+            if (response.status === 200) {
+                // Update the review in the state
+                setEstablishmentReviews(establishmentReviews.map(review => 
+                    review.Establishment_id === editingEstablishmentReview.Establishment_id ? response.data : review
+                ));
+            }
+        } else {
+          console.log('adding new establishment review');
+            // Saving a new review
+            response = await axios.post('http://localhost:3001/saveEstablishmentReview', reviewData);
+            if (response.status === 200) {
+                // Add the new review to the state
+                setEstablishmentReviews([...establishmentReviews, response.data]);
+            }
         }
     } catch (error) {
         console.error('Error saving establishment review:', error);
@@ -88,6 +101,7 @@ function UserReviewsPage() {
     // Close the modal
     setShowModal(false);
 
+    // Fetch the latest reviews
     fetchEstablishmentReviews();
 };
 //TODO
@@ -113,7 +127,6 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
 
   
   const handleUpdateReviewEstablishment = async (establishmentReview) => {
-    console.log(establishmentReview);
     try {
         const response = await axios.get(`http://localhost:3001/getFoodEstablishmentReview/${establishmentReview.Establishment_id}/${establishmentReview.Username}`);
       console.log('Fetched establishment data:', response.data); // Log the response data
@@ -167,6 +180,7 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
                 <UserReviewsFoodEstablishmentTable 
                 data={establishmentReviews} 
                 onDelete={handleDeleteReviewEstablishment}
+                onUpdate={handleUpdateReviewEstablishment}
                 showEstablishmentName={establishmentreviewsWithinMonthFetched} 
                 />
 

@@ -3,24 +3,25 @@ import axios from 'axios';
 import '../styles/EstablishmentReviewForm.css';
 
 const EstablishmentFormReview = ({ establishment: establishmentReview, onSave }) => {
+    
     const [estName, setEstName] = useState(establishmentReview ? establishmentReview.Name : '');
     const [estId, setEstId] = useState(establishmentReview ? establishmentReview.Establishment_id : null);
     const [review, setReview] = useState('');
-    const [rating, setRating] = useState('');
+    const [rating, setRating] = useState(establishmentReview ? establishmentReview.Rating : '');
     const [establishments, setEstablishments] = useState([]);
 
     useEffect(() => {
-        const fetchEstablishments = async () => {
-            const response = await axios.post('http://localhost:3001/getFoodEstablishments');
-            setEstablishments(response.data);
-            if (response.data.length > 0) {
-                setEstName(response.data[0].Name);
-                setEstId(response.data[0].Establishment_id);
-            }
-        };
+    const fetchEstablishments = async () => {
+        const response = await axios.post('http://localhost:3001/getFoodEstablishments');
+        setEstablishments(response.data);
+        if (!establishmentReview && response.data.length > 0) {
+            setEstName(response.data[0].Name);
+            setEstId(response.data[0].Establishment_id);
+        }
+    };
 
-        fetchEstablishments();
-    }, []);
+    fetchEstablishments();
+}, []);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -49,25 +50,28 @@ const EstablishmentFormReview = ({ establishment: establishmentReview, onSave })
             <form onSubmit={handleFormSubmit}>
                 <div>
                     <label>Establishment to be reviewed:</label>
-                    {establishments.length > 0 ? (
+                    {establishmentReview ? (
+                        <p>{establishmentReview.name}  </p>
+                    ) : establishments.length > 0 ? (
                         <select
-                        value={estName}
-                        onChange={handleEstablishmentChange}
-                        required
+                            value={estName}
+                            onChange={handleEstablishmentChange}
+                            required
                         >
-                        {establishments.map((est) => (
-                            <option key={est.id} value={est.Name}>
-                                {est.Name}
-                            </option>
-                        ))}
+                            {establishments.map((est) => (
+                                <option key={est.id} value={est.Name}>
+                                    {est.Name}
+                                </option>
+                            ))}
                         </select>
-                    ) : (<p> No establishments available.</p>
+                    ) : (
+                        <p> No establishments available.</p>
                     )}
                 </div>
                 <div>
                     <label>Review:</label>
                     <textarea
-                        value={review}
+                        defaultValue={establishmentReview ? establishmentReview.review : ''}
                         onChange={(e) => setReview(e.target.value)}
                         required
                     />

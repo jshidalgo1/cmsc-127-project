@@ -21,13 +21,17 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstab
         onDelete(establishmentId);
     };
 
+    const handleUpdate = (establishmentReview) => {
+        onUpdate(establishmentReview);
+    }
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     }
 
     return (
-        <div className="food-establishments-table">
+        <div className="database-table">
             {data.length > 0 ? (
                 <table>
                     <thead>
@@ -52,6 +56,7 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstab
                                 <td>{ithRow.Rating}</td>
                                 <td>
                                     <button onClick={() => handleDelete(ithRow.Establishment_id)}>Delete</button>
+                                    <button onClick={() => onUpdate(ithRow)}>Update</button>
                                 </td>
                             </tr>
                         ))}
