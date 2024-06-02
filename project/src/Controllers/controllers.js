@@ -183,6 +183,22 @@ const deleteEstablishment = async (req, res) => {
         const deleteLinksSql = `DELETE FROM FOOD_ESTABLISHMENT_LINKS WHERE Establishment_id = ?`;
         await conn.query(deleteLinksSql, [Establishment_id]);
 
+        //Delete related entries in food_item_reviews table
+
+        const deleteSql = `
+            DELETE UR 
+            FROM USER_REVIEWS_FOOD_ITEM UR 
+            INNER JOIN FOOD_ITEM FI ON UR.Item_id = FI.Item_id 
+            WHERE FI.establishment_id = ?`;
+        await pool.query(deleteSql, [Establishment_id]);
+
+        // Delete related entries in food_item table
+        const deleteItemsSql = `DELETE FROM FOOD_ITEM WHERE Establishment_id = ?`;
+        await conn.query(deleteItemsSql, [Establishment_id]);
+
+        const deleteReviewEstabSql = `DELETE FROM USER_REVIEWS_FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+        await conn.query(deleteReviewEstabSql, [Establishment_id]);
+
         // Delete the establishment
         const deleteEstablishmentSql = `DELETE FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
         await conn.query(deleteEstablishmentSql, [Establishment_id]);

@@ -3,7 +3,7 @@ import mariadb from 'mariadb';
 const pool = mariadb.createPool({
     host: 'localhost',
     user: 'root',
-    password: '0102', // TODO: change password of local mariadb
+    password: 'Napoli07!', // TODO: change password of local mariadb
     connectionLimit: 5,
     database: 'food_review_system'
 });
@@ -40,14 +40,14 @@ const setUpDatabase = async () => {
             Establishment_id INT,
             links VARCHAR(255),
             PRIMARY KEY (Establishment_id, links),
-            CONSTRAINT fk_food_establishment_links FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
+            CONSTRAINT fk_food_establishment_links FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id) ON DELETE CASCADE
         );`);
 
         await pool.query(`CREATE TABLE IF NOT EXISTS FOOD_ESTABLISHMENT_CONTACT_NO (
             Establishment_id INT,
             Contact_no VARCHAR(20),
             PRIMARY KEY (Establishment_id, Contact_no),
-            CONSTRAINT fk_food_establishment_contact FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
+            CONSTRAINT fk_food_establishment_contact FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id) ON DELETE CASCADE
         );`);
 
         await pool.query(`CREATE TABLE IF NOT EXISTS USER_REVIEWS_FOOD_ESTABLISHMENT (
@@ -57,8 +57,8 @@ const setUpDatabase = async () => {
             Review_date_time DATETIME,
             Rating DECIMAL(3,2),
             PRIMARY KEY (Username, Establishment_id, Review_date_time),
-            CONSTRAINT fk_user_reviews FOREIGN KEY (Username) REFERENCES USER(Username),
-            CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
+            CONSTRAINT fk_user_reviews FOREIGN KEY (Username) REFERENCES USER(Username) ON DELETE CASCADE,
+            CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id) ON DELETE CASCADE
         );`);
 
 
@@ -69,7 +69,7 @@ const setUpDatabase = async () => {
             Price DECIMAL(10,2),
             Food_type VARCHAR(50),
             Establishment_id INT,
-            CONSTRAINT fk_food_item_establishment FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
+            CONSTRAINT fk_food_item_establishment FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id) ON DELETE CASCADE
         );`);
 
         await pool.query(`CREATE TABLE IF NOT EXISTS USER_REVIEWS_FOOD_ITEM (
@@ -79,8 +79,8 @@ const setUpDatabase = async () => {
             Review_date_time DATETIME,
             Rating INT,
             PRIMARY KEY (Username, Item_id, Review_date_time),
-            CONSTRAINT fk_user_reviews_food_item FOREIGN KEY (Username) REFERENCES USER(Username),
-            CONSTRAINT fk_user_reviews_item FOREIGN KEY (Item_id) REFERENCES FOOD_ITEM(Item_id)
+            CONSTRAINT fk_user_reviews_food_item FOREIGN KEY (Username) REFERENCES USER(Username) ON DELETE CASCADE,
+            CONSTRAINT fk_user_reviews_item FOREIGN KEY (Item_id) REFERENCES FOOD_ITEM(Item_id) ON DELETE CASCADE
         );`);
 
         console.log("Database setup completed.");
