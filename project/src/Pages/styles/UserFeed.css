@@ -101,7 +101,7 @@ body {
     border-bottom: none;
 }
 
-.add-new-product-button {
+/* .add-new-product-button {
     background-color: #45a049;
     color: white;
     padding: 5px 10px;
@@ -121,15 +121,10 @@ body {
     background-color: #2f7833;
 }
 
-/* .add-new-product-button:disabled {
-    background-color: #a0a0a0;
-    cursor: not-allowed;
-} */
-
 .plus-sign {
     font-size: 30px;
     margin-right: 5px;
-}
+} */
 
 .inventory-header {
     display: flex;

@@ -3,7 +3,7 @@ import mariadb from 'mariadb';
 const pool = mariadb.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'Napoli07!', // TODO: change password of local mariadb
+    password: '0102', // TODO: change password of local mariadb
     connectionLimit: 5,
     database: 'food_review_system'
 });
@@ -11,7 +11,7 @@ const pool = mariadb.createPool({
 
 const setUpDatabase = async () => {
     try {
-        
+
         await pool.query("CREATE DATABASE IF NOT EXISTS food_review_system;");
 
 
@@ -36,17 +36,6 @@ const setUpDatabase = async () => {
             Type VARCHAR(50)
         );`)
 
-        await pool.query(`CREATE TABLE IF NOT EXISTS USER_REVIEWS_FOOD_ESTABLISHMENT (
-            Username VARCHAR(50),
-            Establishment_id INT,
-            review TEXT,
-            Review_date_time DATETIME,
-            Rating DECIMAL(3,2),
-            PRIMARY KEY (Username, Establishment_id, Review_date_time),
-            CONSTRAINT fk_user_reviews FOREIGN KEY (Username) REFERENCES USER(Username),
-            CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
-        );`);
-
         await pool.query(`CREATE TABLE IF NOT EXISTS FOOD_ESTABLISHMENT_links (
             Establishment_id INT,
             links VARCHAR(255),
@@ -60,6 +49,18 @@ const setUpDatabase = async () => {
             PRIMARY KEY (Establishment_id, Contact_no),
             CONSTRAINT fk_food_establishment_contact FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
         );`);
+
+        await pool.query(`CREATE TABLE IF NOT EXISTS USER_REVIEWS_FOOD_ESTABLISHMENT (
+            Username VARCHAR(50),
+            Establishment_id INT,
+            review TEXT,
+            Review_date_time DATETIME,
+            Rating DECIMAL(3,2),
+            PRIMARY KEY (Username, Establishment_id, Review_date_time),
+            CONSTRAINT fk_user_reviews FOREIGN KEY (Username) REFERENCES USER(Username),
+            CONSTRAINT fk_food_establishment_reviews FOREIGN KEY (Establishment_id) REFERENCES FOOD_ESTABLISHMENT(Establishment_id)
+        );`);
+
 
         await pool.query(`CREATE TABLE IF NOT EXISTS FOOD_ITEM (
             Item_id INT PRIMARY KEY AUTO_INCREMENT,
