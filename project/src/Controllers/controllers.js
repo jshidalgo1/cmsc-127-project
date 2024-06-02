@@ -61,22 +61,6 @@ const getFoodEstablishments = async (req, res) => {
         });
 
         res.status(200).json(combinedData);
-        // const establishments = establishmentsResult.rows.map(est => {
-        //     const links = linksResult.rows
-        //         .filter(link => link.establishment_id === est.establishment_id)
-        //         .map(link => link.link);
-        //     const contactNos = contactNosResult.rows
-        //         .filter(contactNo => contactNo.establishment_id === est.establishment_id)
-        //         .map(contactNo => contactNo.contact_no);
-
-        //     return {
-        //         ...est,
-        //         links,
-        //         contact_nos: contactNos
-        //     };
-        // });
-        // console.log(establishments);
-        // res.status(200).json(establishments);
     } catch (error) {
         console.error('Error executing query', error.stack);
         res.status(500).send('Error executing query');
@@ -182,6 +166,22 @@ const deleteEstablishment = async (req, res) => {
         // Delete related entries in food_establishment_links table
         const deleteLinksSql = `DELETE FROM FOOD_ESTABLISHMENT_LINKS WHERE Establishment_id = ?`;
         await conn.query(deleteLinksSql, [Establishment_id]);
+
+        //Delete related entries in food_item_reviews table
+
+        const deleteSql = `
+            DELETE UR 
+            FROM USER_REVIEWS_FOOD_ITEM UR 
+            INNER JOIN FOOD_ITEM FI ON UR.Item_id = FI.Item_id 
+            WHERE FI.establishment_id = ?`;
+        await pool.query(deleteSql, [Establishment_id]);
+
+        // Delete related entries in food_item table
+        const deleteItemsSql = `DELETE FROM FOOD_ITEM WHERE Establishment_id = ?`;
+        await conn.query(deleteItemsSql, [Establishment_id]);
+
+        const deleteReviewEstabSql = `DELETE FROM USER_REVIEWS_FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
+        await conn.query(deleteReviewEstabSql, [Establishment_id]);
 
         // Delete the establishment
         const deleteEstablishmentSql = `DELETE FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;

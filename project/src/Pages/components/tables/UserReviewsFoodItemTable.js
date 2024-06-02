@@ -30,7 +30,7 @@ const UserReviewsFoodItemTable = ({ data }) => {
             ) : (
                 <div className="no-items">
                     <div className="no-items-large-text">
-                        No User Reviews for Food Establishment Yet
+                        No User Reviews for Food Item Yet
                     </div>
                 </div>
             )}
