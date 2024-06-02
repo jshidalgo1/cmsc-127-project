@@ -10,7 +10,8 @@ import {
     updateEstablishment,
     getEstablishment,
     searchEstablishmentByName,
-    getFoodItemsByEstablishmentId
+    getFoodItemsByEstablishmentId,
+    saveEstablishmentReview
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
@@ -26,6 +27,7 @@ const setUpRoutes = (app) => {
     app.get('/getEstablishment/:id', getEstablishment);
     app.get("/searchEstablishments", searchEstablishmentByName);
     app.get("/getFoodItemsByEstablishmentId/:id", getFoodItemsByEstablishmentId);
+    app.post('/saveEstablishmentReview', saveEstablishmentReview);
 
 }
 
