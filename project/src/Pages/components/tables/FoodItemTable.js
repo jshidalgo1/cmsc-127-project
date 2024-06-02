@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/DatabaseTable.css";
 
-const FoodItemTable = ({ data }) => {
+const FoodItemTable = ({ data, isOrdered }) => {
     return (
         <div className="food-establishments-table">
             {data.length > 0 ? (
@@ -14,6 +14,7 @@ const FoodItemTable = ({ data }) => {
                             <th>Price</th>
                             <th>Food_type</th>
                             <th>Establishment_id</th>
+                            {isOrdered && <th>Establishment Name</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -25,6 +26,7 @@ const FoodItemTable = ({ data }) => {
                                 <td>{ithRow.Price}</td>
                                 <td>{ithRow.Food_type}</td>
                                 <td>{ithRow.Establishment_id}</td>
+                                {isOrdered && <td>{ithRow.EstablishmentName}</td>}
                             </tr>
                         ))}
                     </tbody>

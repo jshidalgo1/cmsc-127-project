@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import { FoodEstablishmentLinks, FoodEstablishmentContactNo } from "./FoodEstablishmentHelperComponents.js";
 import "../styles/FoodEstablishmentsTable.css";
 
-const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
+const FoodEstablishments = ({ data, onDelete, onUpdate, noAction }) => {
     const handleDelete = (establishmentId) => {
         onDelete(establishmentId);
     };
@@ -24,7 +25,7 @@ const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
                             <th>Address</th>
                             <th>Links</th>
                             <th>Contact Number</th>
-                            <th>Action</th>
+                            {noAction === 1 ? null : <th>Action</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -39,12 +40,21 @@ const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
                                     <FoodEstablishmentLinks data={est.links} />
                                 </td>
                                 <td>
-                                    <FoodEstablishmentContactNo data={est.contact_nos} />
+                                    <FoodEstablishmentContactNo data={est.Contact_no} />
                                 </td>
-                                <td>
-                                    <button onClick={() => handleUpdate(est)}>Update</button> {""}
-                                    <button onClick={() => handleDelete(est.Establishment_id)}>Delete</button>
-                                </td>
+                                {!noAction && (
+                                    <td>
+                                        <div className="action-buttons">
+                                            <Link to={{ pathname: `/food-establishment/${est.Establishment_id}` }}>
+                                                <button className="action-button">View</button>
+                                            </Link>
+                                            {" "}
+                                            <button className="action-button" onClick={() => handleUpdate(est)}>Update</button>
+                                            {" "}
+                                            <button className="action-button" onClick={() => handleDelete(est.Establishment_id)}>Delete</button>
+                                        </div>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>
@@ -61,4 +71,3 @@ const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
 };
 
 export default FoodEstablishments;
-

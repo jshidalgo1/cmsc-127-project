@@ -12,7 +12,12 @@ import {
     searchEstablishmentByName,
     saveEstablishmentReview,
     getFoodEstablishmentName,
-    deleteEstablishmentReviews
+    deleteEstablishmentReviews,
+    getFoodItemsByEstablishmentId,
+    saveEstablishmentReview,
+    getAllFoodItemsOrderedByEstablishmentName,
+    getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
+    getAllFoodItemsOrderedByEstablishmentNameAndPrice,
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
@@ -27,9 +32,13 @@ const setUpRoutes = (app) => {
     app.put('/updateEstablishment', updateEstablishment);
     app.get('/getEstablishment/:id', getEstablishment);
     app.get("/searchEstablishments", searchEstablishmentByName);
+    app.get("/getFoodItemsByEstablishmentId/:id", getFoodItemsByEstablishmentId);
     app.post('/saveEstablishmentReview', saveEstablishmentReview);
     app.get('/getFoodEstablishmentName/:id', getFoodEstablishmentName);
     app.delete('/deleteEstablishmentReviews', deleteEstablishmentReviews);
+    app.post('/getAllFoodItemsOrderedByEstablishmentName', getAllFoodItemsOrderedByEstablishmentName);
+    app.post('/getAllFoodItemsOrderedByEstablishmentNameAndFoodType', getAllFoodItemsOrderedByEstablishmentNameAndFoodType);
+    app.post('/getAllFoodItemsOrderedByEstablishmentNameAndPrice', getAllFoodItemsOrderedByEstablishmentNameAndPrice);
 
 }
 
