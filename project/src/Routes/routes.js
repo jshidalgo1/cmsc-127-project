@@ -17,7 +17,9 @@ import {
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,
-    addFoodItemFromEstablishment
+    addFoodItemFromEstablishment,
+    getAllFoodEstablishmentReviewsWithinMonth,
+    getAllFoodItemReviewsWithinMonth
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
@@ -40,6 +42,8 @@ const setUpRoutes = (app) => {
     app.post('/getAllFoodItemsOrderedByEstablishmentNameAndFoodType', getAllFoodItemsOrderedByEstablishmentNameAndFoodType);
     app.post('/getAllFoodItemsOrderedByEstablishmentNameAndPrice', getAllFoodItemsOrderedByEstablishmentNameAndPrice);
     app.post('/addFoodItemFromEstablishment', addFoodItemFromEstablishment);
+    app.get('/getAllFoodEstablishmentReviewsWithinMonth', getAllFoodEstablishmentReviewsWithinMonth);
+    app.get('/getAllFoodItemReviewsWithinMonth', getAllFoodItemReviewsWithinMonth);
 
 }
 

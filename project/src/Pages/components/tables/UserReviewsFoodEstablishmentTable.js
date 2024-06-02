@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import "../../styles/DatabaseTable.css";
 
-const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate }) => {
+const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstablishmentName }) => {
     const [estNames, setEstNames] = useState({});
 
     useEffect(() => {
@@ -16,7 +16,6 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate }) => {
         };
         fetchNames();
     }, [data]);
-
 
     const handleDelete = (establishmentId) => {
         onDelete(establishmentId);
@@ -34,8 +33,8 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate }) => {
                     <thead>
                         <tr>
                             <th>Username</th>
+                            {showEstablishmentName && <th>Establishment Name</th>}
                             <th>Establishment_id</th>
-                            <th>Establishment Name</th>
                             <th>Review_date_time</th>
                             <th>review</th>
                             <th>Rating</th>
@@ -46,14 +45,14 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate }) => {
                         {data.map(ithRow => (
                             <tr key={ithRow.Establishment_id}>
                                 <td>{ithRow.Username}</td>
+                                {showEstablishmentName && <td>{estNames[ithRow.Establishment_id]}</td>}
                                 <td>{ithRow.Establishment_id}</td>
-                                <td>{estNames[ithRow.Establishment_id]}</td>
                                 <td>{formatDate(ithRow.Review_date_time)}</td>
                                 <td>{ithRow.review}</td>
                                 <td>{ithRow.Rating}</td>
                                 <td>
-                                {/*  <button onClick={() => handleUpdate(ithRow)}>Update</button> {""} */}
-                                    <button onClick={() => handleDelete(ithRow.Establishment_id)}>Delete</button></td>
+                                    <button onClick={() => handleDelete(ithRow.Establishment_id)}>Delete</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

@@ -13,6 +13,8 @@ function UserReviewsPage() {
     const [itemReviews, setItemReviews] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [editingEstablishmentReview, setEditingEstablishmentReview] = useState(null);
+    const [establishmentreviewsWithinMonthFetched, setestablishmentReviewsWithinMonthFetched] = useState(false);
+    const [establishmentItemWithinMonthFetched, setestablishmentItemWithinMonthFetched] = useState(false);
     
     const fetchEstablishmentReviews = async () => {
             
@@ -21,6 +23,26 @@ function UserReviewsPage() {
             setEstablishmentReviews(response.data);
         } catch (error) {
             console.error('Error fetching establishment reviews:', error);
+        }
+    };
+
+    const fetchAllFoodEstablishmentReviewsWithinMonth = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/getAllFoodEstablishmentReviewsWithinMonth');
+            setEstablishmentReviews(response.data);
+            setestablishmentReviewsWithinMonthFetched(true);
+        } catch (error) {
+            console.error('Error fetching reviews within the last month:', error);
+        }
+    };
+
+    const fetchAllFoodItemReviewsWithinMonth = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/getAllFoodItemReviewsWithinMonth');
+            setItemReviews(response.data);
+            setestablishmentItemWithinMonthFetched(true);
+        } catch (error) {
+            console.error('Error fetching item reviews within the last month:', error);
         }
     };
 
@@ -139,13 +161,27 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
                 <button className="add-new-establishment-button" onClick={handleAddEstablishmentReviewClick}>
                     <span className="plus-sign">+</span> Add New Food Establishment Review
                 </button>
-                <UserReviewsFoodEstablishmentTable data={establishmentReviews} onDelete={handleDeleteReviewEstablishment} />
+                <button onClick={fetchAllFoodEstablishmentReviewsWithinMonth}>
+                    Get Food Establishment Reviews Within Last Month
+                </button>
+                <UserReviewsFoodEstablishmentTable 
+                data={establishmentReviews} 
+                onDelete={handleDeleteReviewEstablishment}
+                showEstablishmentName={establishmentreviewsWithinMonthFetched} 
+                />
 
                 <h2>Food Item Reviews</h2>
                 <button className="add-new-establishment-button">
                     <span className="plus-sign">+</span> Add New Food Item Review
                 </button>
-                {/* <UserReviewsFoodItemTable data={itemReviews} onDelete={handleDeleteReviewFoodItem} onUpdate={handleUpdateReviewFoodItem} /> */}
+                <button onClick={fetchAllFoodItemReviewsWithinMonth}>
+                    Get Food Item Reviews Within Last Month
+                </button>
+                <UserReviewsFoodItemTable 
+                data={itemReviews}
+                showItemName={establishmentItemWithinMonthFetched}
+                />
+               
 
             </div>
 
