@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar.js";
 import FoodEstablishments from "./components/FoodEstablishments.js";
+import FoodItems from "./components/FoodItems.js";
 import FoodItemForm from "./components/FoodItemForm.js";
 import Modal from "./components/Modal.js";
 import axios from "axios";
@@ -9,7 +10,7 @@ import { useParams } from 'react-router-dom';
 function FoodEstablishmentPage() {
   const [user] = useState(null);
   const { id } = useParams();
-  console.log('Fetched ID:', id); // Log the ID to ensure it's correct
+  console.log('Fetched ID:', id);
 
   const [establishment, setEstablishment] = useState([]);
   const [foodItems, setFoodItems] = useState([]);
@@ -21,16 +22,17 @@ function FoodEstablishmentPage() {
     try {
       const establishmentResponse = await axios.get(`http://localhost:3001/getEstablishment/${id}`);
       setEstablishment([establishmentResponse.data]);
-      console.log('Fetched Establishment:', establishmentResponse.data); // Log the response data
-      console.log('Length Establishment:', establishmentResponse.data.length);
+      console.log('Fetched Establishment:', establishmentResponse.data);
 
       const foodItemsResponse = await axios.get(`http://localhost:3001/getFoodItemsByEstablishmentId/${id}`);
+      console.log('Fetched Food Items:', foodItemsResponse.data);
+
       setFoodItems(foodItemsResponse.data);
-      console.log('Fetched Food Items:', foodItemsResponse.data); // Log the food items data
     } catch (error) {
       console.error('Error fetching establishment details or food items:', error);
     }
   };
+
 
   useEffect(() => {
     fetchEstablishmentAndItems();
@@ -45,18 +47,19 @@ function FoodEstablishmentPage() {
     setShowModal(false);
   };
 
+  // TODO
   const handleSaveFoodItem = async (foodItem) => {
     try {
       if (foodItem.Id) {
-        await axios.put(
-          "http://localhost:3001/updateFoodItem",
-          { ...foodItem, establishmentId: id },
-          { withCredentials: true }
-        );
-        alert("Food item updated successfully!");
+        // await axios.put(
+        //   "http://localhost:3001/updateFoodItem",
+        //   { ...foodItem, establishmentId: id },
+        //   { withCredentials: true }
+        // );
+        // alert("Food item updated successfully!");
       } else {
         await axios.post(
-          "http://localhost:3001/addFoodItem",
+          "http://localhost:3001/addFoodItemFromEstablishment",
           { ...foodItem, establishmentId: id },
           { withCredentials: true }
         );
@@ -91,10 +94,6 @@ function FoodEstablishmentPage() {
     setShowModal(true);
   };
 
-  const filteredFoodItems = foodItems.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
     <>
       <Navbar user={user} />
@@ -108,14 +107,11 @@ function FoodEstablishmentPage() {
           )}
         </div>
 
-        <FoodEstablishments
-          data={establishment}
-          noAction={1}
-        />
+        <FoodEstablishments data={establishment} noAction={1} />
 
         <div className="inventory-header">
           <div className="left-inventory-header">
-            <h2>Food Items</h2>
+            <h2>{establishment.length > 0 ? `${establishment[0].Name}'s Food Items` : "Food Items"}</h2>
             <div className="search-container">
               <input
                 type="text"
@@ -129,9 +125,13 @@ function FoodEstablishmentPage() {
             <span className="plus-sign">+</span> Add New Food Item
           </button>
         </div>
+
+        <FoodItems data={foodItems} onDelete={handleDeleteFoodItem} onUpdate={handleUpdateFoodItem} />
+
       </div>
+
       <Modal show={showModal} onClose={handleCloseModal}>
-        <FoodItemForm foodItem={editingItem} onSave={handleSaveFoodItem} />
+        <FoodItemForm estID={id} foodItem={editingItem} onSave={handleSaveFoodItem} />
       </Modal>
     </>
   );

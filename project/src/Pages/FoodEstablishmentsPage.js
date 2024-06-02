@@ -154,7 +154,11 @@ function FoodEstablishmentsPage() {
           </button>
         </div>
 
-        <FoodEstablishments data={establishments} onDelete={handleDeleteEstablishment} onUpdate={handleUpdateEstablishment} /> {/* Pass FOOD_ESTABLISHMENT data here */}
+        <FoodEstablishments
+          data={establishments}
+          onDelete={handleDeleteEstablishment}
+          onUpdate={handleUpdateEstablishment}
+        />
 
 
         <Modal show={showModal} onClose={handleCloseModal}>
@@ -163,8 +167,6 @@ function FoodEstablishmentsPage() {
             onSave={handleSaveEstablishment}
           />
         </Modal>
-
-
 
       </div>
 
