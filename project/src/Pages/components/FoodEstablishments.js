@@ -11,7 +11,6 @@ const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
         onUpdate(establishment);
     };
 
-
     return (
         <div className="food-establishments-table">
             {data.length > 0 ? (
@@ -53,7 +52,7 @@ const FoodEstablishments = ({ data, onDelete, onUpdate }) => {
             ) : (
                 <div className="no-items">
                     <div className="no-items-large-text">
-                        No Food Establishment Yet
+                        No Food Establishment
                     </div>
                 </div>
             )}
