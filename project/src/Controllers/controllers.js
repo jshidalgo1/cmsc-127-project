@@ -290,6 +290,31 @@ const updateEstablishment = async (req, res) => {
     }
 };
 
+// Update Food Item
+const updateFoodItem = async (req, res) => {
+    const { Item_id, Name, Food_type, Price, Description } = req.body;
+    const conn = await pool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+
+        // Update Food Item details
+        const updateEstablishmentSql = `UPDATE FOOD_ITEM SET Name = ?, Food_type = ?, Price = ?, Description = ? 
+        WHERE Item_id = ?`;
+        await conn.query(updateEstablishmentSql, [Name, Food_type, Price, Description, Item_id]);
+
+        await conn.commit();
+        res.status(200).json({ success: `Food Item updated successfully!` });
+    } catch (error) {
+        await conn.rollback();
+        console.error('Error updating Food Item:', error.stack);
+        res.status(500).send('Error updating Food Item: ' + error.message);
+    } finally {
+        conn.release();
+    }
+};
+
+
 
 
 // Get Establishment by Id
@@ -725,6 +750,7 @@ export {
     deleteEstablishment,
     deleteFoodItem,
     updateEstablishment,
+    updateFoodItem,
     getEstablishment,
     searchEstablishmentByName,
     saveEstablishmentReview,

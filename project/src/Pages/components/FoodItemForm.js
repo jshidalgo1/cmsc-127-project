@@ -6,12 +6,13 @@ const FoodItemForm = ({ estID, items, onSave }) => {
     const [itemType, setItemType] = useState(items ? items.Food_type : '');
     const [itemPrice, setItemPrice] = useState(items ? items.Price : '');
     const [itemDescription, setItemDescription] = useState(items ? items.Description : '');
+    // const [itemEstabId, setItemEstabId] = useState(items ? items.Establishment_id : '');
 
     useEffect(() => {
         if (items) {
             setItemName(items.Name || '');
-            setItemType(items.Type || '');
-            setItemPrice(items.Address || '');
+            setItemType(items.Food_type || '');
+            setItemPrice(items.Price || '');
             setItemDescription(items.Description || '');
         } else {
             setItemName('');
