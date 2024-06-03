@@ -10,6 +10,7 @@ function FoodEstablishmentsPage() {
 
   const [establishments, setEstablishments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewHighRating, setViewHighRating] = useState(0);
 
   const [showModal, setShowModal] = useState(false);
   const [editingEstablishment, setEditingEstablishment] = useState(null);
@@ -22,7 +23,12 @@ function FoodEstablishmentsPage() {
         response = await axios.get(
           `http://localhost:3001/searchEstablishments?name=${searchQuery}`
         );
-      } else {
+      } else if (viewHighRating === 1) {
+        response = await axios.post(
+          `http://localhost:3001/getHigRatingEstablishment`
+        );
+      }
+      else {
         response = await axios.post(
           "http://localhost:3001/getFoodEstablishments"
         );
@@ -39,7 +45,7 @@ function FoodEstablishmentsPage() {
 
   useEffect(() => {
     fetchEstablishments();
-  }, [searchQuery]);
+  }, [searchQuery, viewHighRating]);
 
 
 
@@ -119,6 +125,17 @@ function FoodEstablishmentsPage() {
     }
   };
 
+  // Function to handle View High Rating Establishment
+  const handleViewHighRatingEstablishment = () => {
+    if (viewHighRating === 0) {
+      setViewHighRating(1);
+      setSearchQuery('');
+    } else {
+      setViewHighRating(0);
+      setSearchQuery('');
+    }
+  };
+
 
   return (
     <>
@@ -146,6 +163,10 @@ function FoodEstablishmentsPage() {
                 placeholder="Search by name..."
               />
             </div>
+
+            <button className="view-button" onClick={handleViewHighRatingEstablishment}>
+              {viewHighRating === 0 ? "View High Rating Food Establishment" : "View All Food Establishment"}
+            </button>
 
           </div>
 
