@@ -413,8 +413,6 @@ const addFoodItemFromEstablishment = async (req, res) => {
 };
 
 
-
-
 // // Get Establishment by Id
 // const getEstablishment = async (req, res) => {
 //     const { id } = req.params;
@@ -681,7 +679,65 @@ const getAllFoodItemReviewsWithinMonth = async (req, res) => {
     }
 };
 
+const saveFoodItemReview = async (req, res) => {
+    const { Username, Item_id, Review, Rating } = req.body;
+    console.log(req.body);
+    const sql = `INSERT INTO USER_REVIEWS_FOOD_ITEM (Username, Item_id, review, Rating, Review_date_time) VALUES (?, ?, ?, ?, NOW())`;
+    pool.query(sql, [Username, Item_id, Review, Rating])
+        .then((result) => {
+            res.status(200).json({ success: `Review added successfully!` });
+        })
+        .catch((error) => {
+            console.error('Error saving establishment review:', error.stack);
+            res.status(500).send('Error saving establishment review');
+        });
+}
 
+const updateFoodItemReview = async (req, res) => {
+    const { Item_id, Review, Rating } = req.body;
+    console.log(req.body);
+    const sql = `UPDATE USER_REVIEWS_FOOD_ESTABLISHMENT SET Review = ?, Rating = ?, review_date_time = NOW() WHERE Establishment_id = ?`;
+    pool.query(sql, [Review, Rating, Item_id])
+
+        .then((result) => {
+            res.status(200).json({ success: `Review updated successfully!` });
+        })
+        .catch((error) => {
+            console.error('Error updating establishment review:', error.stack);
+            res.status(500).send('Error updating establishment review');
+        });
+}
+
+const deleteFoodItemReview = async (req, res) => {
+    const { Item_id } = req.body;
+    const sql = `DELETE FROM USER_REVIEWS_FOOD_ITEM WHERE Item_id = ?`;
+    pool.query(sql, [Item_id])
+        .then((result) => {
+            res.status(200).json({ success: `Review deleted successfully!` });
+        })
+        .catch((error) => {
+            console.error('Error deleting establishment reviews:', error.stack);
+            res.status(500).send('Error deleting establishment reviews');
+        });
+}
+
+const getFoodItemName = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const reviewsQuery =
+            'SELECT name FROM food_item WHERE item_id = ?';
+        const [rows] = await pool.query(reviewsQuery, [id]);
+        console.log(rows);
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error fetching establishment name:', error.stack);
+        res.status(500).send('Error fetching establishment name: ' + error.message);
+    }
+}
+
+const getSpecificFoodItemReview = async (req, res) => {
+    
+}
 
 
 export {
@@ -707,5 +763,10 @@ export {
     getAllFoodEstablishmentReviewsWithinMonth,
     getAllFoodItemReviewsWithinMonth,
     getSpecificFoodEstablishmentReview,
-    updateEstablishmentReview
+    updateEstablishmentReview,
+    saveFoodItemReview,
+    updateFoodItemReview,
+    deleteFoodItemReview,
+    getFoodItemName,
+    getSpecificFoodItemReview
 };

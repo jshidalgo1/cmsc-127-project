@@ -6,13 +6,15 @@ import UserReviewsFoodItemTable from "./components/tables/UserReviewsFoodItemTab
 import Modal from "./components/Modal.js";
 import EstablishmentFormReview from "./components/UserEstablishmentReviewForm.js";
 import UserContext from "../Routes/UserContext.js";
-
+import ItemFormReview from "./components/ItemReviewForm.js";
 function UserReviewsPage() {
     const { user } = useContext(UserContext);
     const [establishmentReviews, setEstablishmentReviews] = useState([]);
     const [itemReviews, setItemReviews] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showEstablishmentModal, setShowEstablishmentModal] = useState(false);
     const [editingEstablishmentReview, setEditingEstablishmentReview] = useState(null);
+    const [showItemModal, setShowItemModal] = useState(false);
+    const [editingItemReview, setEditingItemReview] = useState(null);
     const [establishmentreviewsWithinMonthFetched, setestablishmentReviewsWithinMonthFetched] = useState(false);
     const [establishmentItemWithinMonthFetched, setestablishmentItemWithinMonthFetched] = useState(false);
     
@@ -46,28 +48,28 @@ function UserReviewsPage() {
         }
     };
 
-    useEffect(() => {
-        const fetchItemReviews = async () => {
-            try {
-                const response = await axios.get('http://localhost:3001/getFoodReviews');
-                setItemReviews(response.data);
-            } catch (error) {
-                console.error('Error fetching item reviews:', error);
-            }
-        };
+    const fetchItemReviews = async () => {
+      try {
+          const response = await axios.get('http://localhost:3001/getFoodReviews');
+          setItemReviews(response.data);
+      } catch (error) {
+          console.error('Error fetching item reviews:', error);
+      }
+  };
 
+    useEffect(() => {
         fetchEstablishmentReviews();
         fetchItemReviews();
     }, []);
 
     const handleAddEstablishmentReviewClick = () => {
         setEditingEstablishmentReview(null); // Clear the editing establishment
-        setShowModal(true); // Show the modal
+        setShowEstablishmentModal(true); // Show the modal
       };
 
     // Function to close the modal
-    const handleCloseModal = () => {
-        setShowModal(false);
+    const handleCloseEstablishmentModal = () => {
+        setShowEstablishmentModal(false);
     };
 
     // Function to save the establishment review
@@ -99,7 +101,7 @@ const handleSaveEstablishmentReview = async (reviewData) => {
     }
 
     // Close the modal
-    setShowModal(false);
+    setShowEstablishmentModal(false);
 
     // Fetch the latest reviews
     fetchEstablishmentReviews();
@@ -131,12 +133,88 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
         const response = await axios.get(`http://localhost:3001/getFoodEstablishmentReview/${establishmentReview.Establishment_id}/${establishmentReview.Username}`);
       console.log('Fetched establishment data:', response.data); // Log the response data
       setEditingEstablishmentReview(response.data); // Assuming response.data contains the establishment details
-      setShowModal(true);
+      setShowEstablishmentModal(true);
     } catch (error) {
       console.error('Error fetching establishment details:', error);
       alert("Failed to fetch establishment details. Please try again.");
     }
   };
+
+  // Add this function to handle the opening of the food item review modal
+  const handleAddItemReviewClick = () => {
+    setEditingItemReview(null); // Clear the editing item review
+    setShowItemModal(true); // Show the modal
+  };
+
+  const handleCloseItemModal = () => {
+    setShowItemModal(false);
+};
+
+// Add this function to handle the saving of the food item review
+const handleSaveItemReview = async (reviewData) => {
+    reviewData.Username = user.Username;
+    try {
+        let response;
+        if (editingItemReview) {
+          console.log('Editing establishment review');
+            // Updating an existing review
+            response = await axios.put(`http://localhost:3001/updateReview/${reviewData.Item_id}`, reviewData);
+            if (response.status === 200) {
+                // Update the review in the state
+                setItemReviews(itemReviews.map(review => 
+                    review.Item_id === editingItemReview.Item_id ? response.data : review
+                ));
+            }
+        } else {
+          console.log('adding new establishment review');
+            // Saving a new review
+            response = await axios.post('http://localhost:3001/saveFoodItemReview', reviewData);
+            if (response.status === 200) {
+                // Add the new review to the state
+                setEstablishmentReviews([...establishmentReviews, response.data]);
+            }
+        }
+    } catch (error) {
+        console.error('Error saving establishment review:', error);
+    }
+
+    fetchItemReviews();
+    fetchEstablishmentReviews();
+};
+
+// Add this function to handle the updating of the food item review
+const handleUpdateReviewItem = async (itemReview) => {
+    try {
+        const response = await axios.get(`http://localhost:3001/getFoodItemReview/${itemReview.Item_id}/${itemReview.Username}`);
+      console.log('Fetched establishment data:', response.data); // Log the response data
+      setEditingItemReview(response.data); // Assuming response.data contains the establishment details
+      setShowItemModal(true);
+    } catch (error) {
+      console.error('Error fetching establishment details:', error);
+      alert("Failed to fetch establishment details. Please try again.");
+    }
+};
+
+const handleDeleteReviewItem = async (Item_id) => {
+    try {
+        console.log("Item id: ", Item_id);
+    
+        await axios.delete(
+        `http://localhost:3001/deleteFoodItemReview`,
+        {
+            data: { Item_id },
+            withCredentials: true,
+        }
+        );
+    
+        // alert("Establishment deleted successfully!");
+        fetchItemReviews();
+    } catch (error) {
+        console.error('Error deleting establishment:', error);
+        alert("Failed to delete establishment. Please try again.");
+    }
+    
+}
 
 //   const handleDeleteReviewFoodItem = async (Establishment_id) => {
 //     try {
@@ -185,7 +263,7 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
                 />
 
                 <h2>Food Item Reviews</h2>
-                <button className="add-new-establishment-button">
+                <button className="add-new-establishment-button" onClick={handleAddItemReviewClick}>
                     <span className="plus-sign">+</span> Add New Food Item Review
                 </button>
                 <button onClick={fetchAllFoodItemReviewsWithinMonth}>
@@ -194,6 +272,8 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
                 <UserReviewsFoodItemTable 
                 data={itemReviews}
                 showItemName={establishmentItemWithinMonthFetched}
+                onDelete={handleDeleteReviewItem}
+                onUpdate={handleUpdateReviewItem}
                 />
                
 
@@ -201,11 +281,18 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
 
             
 
-            <Modal show={showModal} onClose={handleCloseModal}>
+            <Modal show={showEstablishmentModal} onClose={handleCloseEstablishmentModal}>
           <EstablishmentFormReview
             establishment={editingEstablishmentReview}
             onSave={handleSaveEstablishmentReview}
           />
+        </Modal>
+
+        <Modal show={showItemModal} onClose={handleCloseItemModal}>
+            <ItemFormReview
+                item={editingItemReview}
+                onSave={handleSaveItemReview}
+            />
         </Modal>
 
 

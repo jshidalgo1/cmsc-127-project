@@ -21,7 +21,12 @@ import {
     getAllFoodEstablishmentReviewsWithinMonth,
     getAllFoodItemReviewsWithinMonth,
     getSpecificFoodEstablishmentReview,
-    updateEstablishmentReview
+    updateEstablishmentReview, 
+    saveFoodItemReview,
+    updateFoodItemReview,
+    deleteFoodItemReview,
+    getFoodItemName,
+    getSpecificFoodItemReview
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
@@ -48,7 +53,11 @@ const setUpRoutes = (app) => {
     app.post('/addFoodItemFromEstablishment', addFoodItemFromEstablishment);
     app.get('/getAllFoodEstablishmentReviewsWithinMonth', getAllFoodEstablishmentReviewsWithinMonth);
     app.get('/getAllFoodItemReviewsWithinMonth', getAllFoodItemReviewsWithinMonth);
-
+    app. post('/saveFoodItemReview', saveFoodItemReview);
+    app.put('/updateFoodItemReview/:id', updateFoodItemReview);
+    app.delete('/deleteFoodItemReview', deleteFoodItemReview);
+    app.get('/getFoodItemName/:id', getFoodItemName);
+    app.get('/getFoodItemReview/:id/:username', getSpecificFoodItemReview);
 }
 
 export default setUpRoutes;

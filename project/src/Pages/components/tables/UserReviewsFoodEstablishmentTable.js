@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import "../../styles/DatabaseTable.css";
 
+
 const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstablishmentName }) => {
     const [estNames, setEstNames] = useState({});
 
@@ -17,8 +18,8 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstab
         fetchNames();
     }, [data]);
 
-    const handleDelete = (establishmentId) => {
-        onDelete(establishmentId);
+    const handleDelete = (establishmentReview) => {
+        onDelete(establishmentReview);
     };
 
     const handleUpdate = (establishmentReview) => {
@@ -37,7 +38,7 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstab
                     <thead>
                         <tr>
                             <th>Username</th>
-                            {showEstablishmentName && <th>Establishment Name</th>}
+                            <th>Establishment Name</th>
                             <th>Establishment_id</th>
                             <th>Review_date_time</th>
                             <th>review</th>
@@ -49,7 +50,7 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstab
                         {data.map(ithRow => (
                             <tr key={ithRow.Establishment_id}>
                                 <td>{ithRow.Username}</td>
-                                {showEstablishmentName && <td>{estNames[ithRow.Establishment_id]}</td>}
+                                <td>{estNames[ithRow.Establishment_id]}</td>
                                 <td>{ithRow.Establishment_id}</td>
                                 <td>{formatDate(ithRow.Review_date_time)}</td>
                                 <td>{ithRow.review}</td>
