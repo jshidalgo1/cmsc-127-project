@@ -36,7 +36,16 @@ const authenticateUser = async (req, res) => {
 // }
 
 const getFoodEstablishments = async (req, res) => {
-    const establishmentsSql = 'SELECT * FROM FOOD_ESTABLISHMENT';
+    const establishmentsSql = `
+        SELECT 
+            FE.*, 
+            ROUND(COALESCE(AVG(R.rating), 0), 2) AS AverageRating  
+        FROM 
+            FOOD_ESTABLISHMENT FE
+            LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT R ON FE.Establishment_id = R.Establishment_id
+        GROUP BY 
+            FE.Establishment_id
+    `;
     const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
     const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
 
