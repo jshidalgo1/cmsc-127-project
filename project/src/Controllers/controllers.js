@@ -455,6 +455,95 @@ const searchFoodItemByName = async (req, res) => {
 };
 
 
+// const getFoodEstablishments = async (req, res) => {
+//     const establishmentsSql = `
+//         SELECT 
+//             FE.*, 
+//             ROUND(COALESCE(AVG(R.rating), 0), 2) AS AverageRating  
+//         FROM 
+//             FOOD_ESTABLISHMENT FE
+//             LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT R ON FE.Establishment_id = R.Establishment_id
+//         GROUP BY 
+//             FE.Establishment_id
+//     `;
+//     const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
+//     const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
+
+//     try {
+//         const establishments = await pool.query(establishmentsSql);
+//         const links = await pool.query(linksSql);
+//         const contactNos = await pool.query(contactNosSql);
+
+//         const combinedData = establishments.map(est => {
+//             const estLinks = links
+//                 .filter(link => link.Establishment_id === est.Establishment_id)
+//                 .map(link => link.links);
+//             const estContactNos = contactNos
+//                 .filter(contactNo => contactNo.Establishment_id === est.Establishment_id)
+//                 .map(contactNo => contactNo.Contact_no);
+
+//             return {
+//                 ...est,
+//                 links: estLinks,
+//                 Contact_no: estContactNos
+//             };
+//         });
+
+//         res.status(200).json(combinedData);
+//     } catch (error) {
+//         console.error('Error executing query', error.stack);
+//         res.status(500).send('Error executing query');
+//     }
+// }
+
+
+// Get High Rating Establishment
+const getHighRatingEstablishment = async (req, res) => {
+    const establishmentsSql = `
+        SELECT 
+            FE.*, 
+            ROUND(COALESCE(AVG(R.rating), 0), 2) AS AverageRating  
+        FROM 
+            FOOD_ESTABLISHMENT FE
+            LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT R ON FE.Establishment_id = R.Establishment_id
+        GROUP BY 
+            FE.Establishment_id
+        HAVING 
+            AverageRating >= 4;
+        `;
+
+    const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
+    const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
+
+    try {
+        const establishments = await pool.query(establishmentsSql);
+        const links = await pool.query(linksSql);
+        const contactNos = await pool.query(contactNosSql);
+
+        const combinedData = establishments.map(est => {
+            const estLinks = links
+                .filter(link => link.Establishment_id === est.Establishment_id)
+                .map(link => link.links);
+            const estContactNos = contactNos
+                .filter(contactNo => contactNo.Establishment_id === est.Establishment_id)
+                .map(contactNo => contactNo.Contact_no);
+
+            return {
+                ...est,
+                links: estLinks,
+                Contact_no: estContactNos
+            };
+        });
+
+        res.status(200).json(combinedData);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query');
+    }
+};
+
+
+
 const saveEstablishmentReview = async (req, res) => {
     const { Username, Establishment_id, Review, Rating } = req.body;
     const sql = `INSERT INTO USER_REVIEWS_FOOD_ESTABLISHMENT (Username, Establishment_id, review, Rating, Review_date_time) VALUES (?, ?, ?, ?, NOW())`;
@@ -496,7 +585,7 @@ const getEstablishmentById = async (req, res) => {
     }
 };
 
-
+// Get Food Items By EstablishmentId
 const getFoodItemsByEstablishmentId = async (req, res) => {
     const { establishmentId } = req.params;
     console.log('getFoodItemsByEstablishmentId called with establishmentId:', establishmentId);
@@ -506,6 +595,40 @@ const getFoodItemsByEstablishmentId = async (req, res) => {
     try {
         const result = await pool.query(sql, [establishmentId]);
         console.log('getFoodItemsByEstablishmentId result:', result);
+        res.status(200).send(result);
+    } catch (error) {
+        console.error('Error fetching food items by establishment ID:', error.stack);
+        res.status(500).send('Error fetching food items by establishment ID: ' + error.message);
+    }
+};
+
+// Get Sorted By Price ASC Food Items By Establishment Id
+const getSortedByPriceASCFoodItemsByEstablishmentId = async (req, res) => {
+    const { establishmentId } = req.params;
+    console.log('getFoodItemsByEstablishmentId called with establishmentId:', establishmentId);
+
+    const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ? ORDER BY Price`;
+
+    try {
+        const result = await pool.query(sql, [establishmentId]);
+        console.log('getSortedByPriceFoodItemsByEstablishmentId result: Sorted', result);
+        res.status(200).send(result);
+    } catch (error) {
+        console.error('Error fetching food items by establishment ID:', error.stack);
+        res.status(500).send('Error fetching food items by establishment ID: ' + error.message);
+    }
+};
+
+// Get Sorted By Price DESC Food Items By Establishment Id
+const getSortedByPriceDESCFoodItemsByEstablishmentId = async (req, res) => {
+    const { establishmentId } = req.params;
+    console.log('getFoodItemsByEstablishmentId called with establishmentId:', establishmentId);
+
+    const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ? ORDER BY Price DESC`;
+
+    try {
+        const result = await pool.query(sql, [establishmentId]);
+        console.log('getSortedByPriceFoodItemsByEstablishmentId result: Sorted', result);
         res.status(200).send(result);
     } catch (error) {
         console.error('Error fetching food items by establishment ID:', error.stack);
@@ -868,11 +991,14 @@ export {
     getEstablishment,
     searchEstablishmentByName,
     searchFoodItemByName,
+    getHighRatingEstablishment,
     saveEstablishmentReview,
     getFoodEstablishmentName,
     addFoodItemFromEstablishment,
     deleteEstablishmentReviews,
     getFoodItemsByEstablishmentId,
+    getSortedByPriceASCFoodItemsByEstablishmentId,
+    getSortedByPriceDESCFoodItemsByEstablishmentId,
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,

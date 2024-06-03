@@ -13,10 +13,13 @@ import {
     getEstablishment,
     searchEstablishmentByName,
     searchFoodItemByName,
+    getHighRatingEstablishment,
     saveEstablishmentReview,
     getFoodEstablishmentName,
     deleteEstablishmentReviews,
     getFoodItemsByEstablishmentId,
+    getSortedByPriceASCFoodItemsByEstablishmentId,
+    getSortedByPriceDESCFoodItemsByEstablishmentId,
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,
@@ -47,7 +50,10 @@ const setUpRoutes = (app) => {
     app.get('/getEstablishment/:id', getEstablishment);
     app.get("/searchEstablishments", searchEstablishmentByName);
     app.get("/searchFoodItemByName", searchFoodItemByName);
+    app.post("/getHigRatingEstablishment", getHighRatingEstablishment);
     app.get('/getFoodItemsByEstablishmentId/:establishmentId', getFoodItemsByEstablishmentId);
+    app.get('/getSortedByPriceASCFoodItemsByEstablishmentId/:establishmentId', getSortedByPriceASCFoodItemsByEstablishmentId);
+    app.get('/getSortedByPriceDESCFoodItemsByEstablishmentId/:establishmentId', getSortedByPriceDESCFoodItemsByEstablishmentId);
     app.post('/saveEstablishmentReview', saveEstablishmentReview);
     app.get('/getFoodEstablishmentName/:id', getFoodEstablishmentName);
     app.delete('/deleteEstablishmentReviews', deleteEstablishmentReviews);
