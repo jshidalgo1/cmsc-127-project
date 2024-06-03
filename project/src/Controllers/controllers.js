@@ -166,7 +166,8 @@ const addFoodItemFromEstablishment = async (req, res) => {
     }
 };
 
-// Delete Establishment
+// TODO
+// Delete Establishment 
 const deleteEstablishment = async (req, res) => {
     const { Establishment_id } = req.body;
     const conn = await pool.getConnection();
@@ -212,6 +213,33 @@ const deleteEstablishment = async (req, res) => {
         conn.release();
     }
 };
+
+//Delete Food Item
+const deleteFoodItem = async (req, res) => {
+    const { itemId } = req.body;
+    const conn = await pool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+
+        // Delete related entries in food_item table
+        const deleteItemsSql = `DELETE FROM FOOD_ITEM WHERE Item_id = ?`;
+        await conn.query(deleteItemsSql, [itemId]);
+
+        const deleteReviewItemSql = `DELETE FROM USER_REVIEWS_FOOD_ITEM WHERE Item_id = ?`;
+        await conn.query(deleteReviewItemSql, [itemId]);
+
+        await conn.commit();
+        res.status(200).json({ success: `Item deleted successfully!` });
+    } catch (error) {
+        await conn.rollback();
+        console.error('Error deleting Item:', error.stack);
+        res.status(500).send('Error deleting Item: ' + error.message);
+    } finally {
+        conn.release();
+    }
+};
+
 
 // Update Establishment
 const updateEstablishment = async (req, res) => {
@@ -695,6 +723,7 @@ export {
     getFoodEstablishmentReviews,
     addEstablishment,
     deleteEstablishment,
+    deleteFoodItem,
     updateEstablishment,
     getEstablishment,
     searchEstablishmentByName,

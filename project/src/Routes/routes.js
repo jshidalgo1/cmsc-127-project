@@ -7,6 +7,7 @@ import {
     getFoodEstablishmentReviews,
     addEstablishment,
     deleteEstablishment,
+    deleteFoodItem,
     updateEstablishment,
     getEstablishment,
     searchEstablishmentByName,
@@ -33,6 +34,7 @@ const setUpRoutes = (app) => {
     app.get('/getFoodEstablishmentReviews', getFoodEstablishmentReviews);
     app.post('/addEstablishment', addEstablishment);
     app.delete('/deleteEstablishment', deleteEstablishment);
+    app.delete('/deleteFoodItem', deleteFoodItem);
     app.put('/updateEstablishment', updateEstablishment);
     app.get('/getEstablishment/:id', getEstablishment);
     app.get("/searchEstablishments", searchEstablishmentByName);
