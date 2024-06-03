@@ -407,6 +407,33 @@ const searchEstablishmentByName = async (req, res) => {
     }
 };
 
+// Search Food Item by Name
+const searchFoodItemByName = async (req, res) => {
+    const { name, id } = req.query;
+    const sql = `
+        SELECT * FROM FOOD_ITEM WHERE Establishment_id = ? AND Name LIKE ?`;
+    const searchPattern = `%${name}%`;
+    try {
+        const foodItemResults = await pool.query(sql, [id, searchPattern]);
+
+        const foodItems = foodItemResults.map(foodItemResult => ({
+            Item_id: foodItemResult.Item_id,
+            Name: foodItemResult.Name,
+            Food_type: foodItemResult.Food_type,
+            Price: foodItemResult.Price,
+            Description: foodItemResult.Description,
+            Establishment_id: foodItemResult.Establishment_id,
+        }));
+
+        console.log('searchFoodItemByName Result:', foodItems);
+        res.status(200).json(foodItems);
+    } catch (error) {
+        console.error('Error searching food Items by name:', error.stack);
+        res.status(500).send('Error searching food Items by name');
+    }
+};
+
+
 const saveEstablishmentReview = async (req, res) => {
     const { Username, Establishment_id, Review, Rating } = req.body;
     const sql = `INSERT INTO USER_REVIEWS_FOOD_ESTABLISHMENT (Username, Establishment_id, review, Rating, Review_date_time) VALUES (?, ?, ?, ?, NOW())`;
@@ -819,6 +846,7 @@ export {
     updateFoodItem,
     getEstablishment,
     searchEstablishmentByName,
+    searchFoodItemByName,
     saveEstablishmentReview,
     getFoodEstablishmentName,
     addFoodItemFromEstablishment,

@@ -24,7 +24,15 @@ function FoodEstablishmentPage() {
       setEstablishment([establishmentResponse.data]);
       console.log('Fetched Establishment:', establishmentResponse.data);
 
-      const foodItemsResponse = await axios.get(`http://localhost:3001/getFoodItemsByEstablishmentId/${id}`);
+      let foodItemsResponse;
+      if (searchQuery) {
+        foodItemsResponse = await axios.get(
+          `http://localhost:3001/searchFoodItemByName?name=${searchQuery}&id=${id}`
+        );
+      } else {
+        foodItemsResponse = await axios.get(`http://localhost:3001/getFoodItemsByEstablishmentId/${id}`);
+      }
+
       console.log('Fetched Food Items:', foodItemsResponse.data);
 
       setFoodItems(foodItemsResponse.data);
@@ -36,7 +44,7 @@ function FoodEstablishmentPage() {
 
   useEffect(() => {
     fetchEstablishmentAndItems();
-  }, [id]);
+  }, [id, searchQuery]);
 
   const handleAddFoodItemClick = () => {
     setEditingItem(null);
