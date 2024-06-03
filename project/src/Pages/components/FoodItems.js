@@ -38,14 +38,11 @@ const FoodItems = ({ data, onDelete, onUpdate }) => {
                                 <td>{item.Establishment_id}</td>
 
                                 <td>
-                                    {/* <button><Link to={{ pathname: `/food-establishment/${item.Establishment_id}` }}>View</Link></button> {""}
-                                    <button className="action-button" onClick={() => handleUpdate(item)}>Update</button> {""}
-                                    <button className="action-button" onClick={() => handleDelete(item.Establishment_id)}>Delete</button> */}
                                     <div className="action-buttons">
-                                        <Link to={{ pathname: `/food-establishment/${item.Establishment_id}` }}>
+                                        {/* <Link to={{ pathname: `/food-establishment/${item.Establishment_id}` }}>
                                             <button className="action-button">View</button>
                                         </Link>
-                                        {" "}
+                                        {" "} */}
                                         <button className="action-button" onClick={() => handleUpdate(item)}>Update</button>
                                         {" "}
                                         <button className="action-button" onClick={() => handleDelete(item.Item_id)}>Delete</button>
