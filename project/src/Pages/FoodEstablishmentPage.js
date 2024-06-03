@@ -50,7 +50,7 @@ function FoodEstablishmentPage() {
   // TODO
   const handleSaveFoodItem = async (foodItem) => {
     try {
-      if (foodItem.Id) {
+      if (foodItem.Item_id) {
         // await axios.put(
         //   "http://localhost:3001/updateFoodItem",
         //   { ...foodItem, establishmentId: id },
@@ -126,12 +126,20 @@ function FoodEstablishmentPage() {
           </button>
         </div>
 
-        <FoodItems data={foodItems} onDelete={handleDeleteFoodItem} onUpdate={handleUpdateFoodItem} />
+        <FoodItems
+          data={foodItems}
+          onDelete={handleDeleteFoodItem}
+          onUpdate={handleUpdateFoodItem}
+        />
 
       </div>
 
       <Modal show={showModal} onClose={handleCloseModal}>
-        <FoodItemForm estID={id} foodItem={editingItem} onSave={handleSaveFoodItem} />
+        <FoodItemForm
+          estID={id}
+          foodItem={editingItem}
+          onSave={handleSaveFoodItem}
+        />
       </Modal>
     </>
   );

@@ -151,6 +151,21 @@ const addEstablishment = async (req, res) => {
     }
 };
 
+// Add Food Item through Establishment
+const addFoodItemFromEstablishment = async (req, res) => {
+    const { Name, Food_type, Price, Description, Establishment_id } = req.body;
+
+    const sql = `INSERT INTO FOOD_ITEM (Establishment_id, Name, Description, Price, Food_type) 
+                 VALUES (?, ?, ?, ?, ?)`;
+    try {
+        await pool.query(sql, [Establishment_id, Name, Description, Price, Food_type]);
+        res.status(200).json({ success: "Food item added successfully!" });
+    } catch (error) {
+        console.error('Error adding food item:', error.stack);
+        res.status(500).send('Error adding food item: ' + error.message);
+    }
+};
+
 // Delete Establishment
 const deleteEstablishment = async (req, res) => {
     const { Establishment_id } = req.body;
@@ -397,20 +412,7 @@ const getFoodItemsByEstablishmentId = async (req, res) => {
     }
 };
 
-const addFoodItemFromEstablishment = async (req, res) => {
-    const { establishmentId, itemName, description, price, category } = req.body;
 
-    const sql = `INSERT INTO FOOD_ITEM (Establishment_id, name, Description, Price, food_type) 
-                 VALUES (?, ?, ?, ?, ?)`;
-
-    try {
-        await pool.query(sql, [establishmentId, itemName, description, price, category]);
-        res.status(200).json({ success: "Food item added successfully!" });
-    } catch (error) {
-        console.error('Error adding food item:', error.stack);
-        res.status(500).send('Error adding food item: ' + error.message);
-    }
-};
 
 
 
