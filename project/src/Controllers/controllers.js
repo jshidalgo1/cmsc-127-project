@@ -151,7 +151,23 @@ const addEstablishment = async (req, res) => {
     }
 };
 
-// Delete Establishment
+// Add Food Item through Establishment
+const addFoodItemFromEstablishment = async (req, res) => {
+    const { Name, Food_type, Price, Description, Establishment_id } = req.body;
+
+    const sql = `INSERT INTO FOOD_ITEM (Establishment_id, Name, Description, Price, Food_type) 
+                 VALUES (?, ?, ?, ?, ?)`;
+    try {
+        await pool.query(sql, [Establishment_id, Name, Description, Price, Food_type]);
+        res.status(200).json({ success: "Food item added successfully!" });
+    } catch (error) {
+        console.error('Error adding food item:', error.stack);
+        res.status(500).send('Error adding food item: ' + error.message);
+    }
+};
+
+// TODO
+// Delete Establishment 
 const deleteEstablishment = async (req, res) => {
     const { Establishment_id } = req.body;
     const conn = await pool.getConnection();
@@ -197,6 +213,33 @@ const deleteEstablishment = async (req, res) => {
         conn.release();
     }
 };
+
+//Delete Food Item
+const deleteFoodItem = async (req, res) => {
+    const { itemId } = req.body;
+    const conn = await pool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+
+        // Delete related entries in food_item table
+        const deleteItemsSql = `DELETE FROM FOOD_ITEM WHERE Item_id = ?`;
+        await conn.query(deleteItemsSql, [itemId]);
+
+        const deleteReviewItemSql = `DELETE FROM USER_REVIEWS_FOOD_ITEM WHERE Item_id = ?`;
+        await conn.query(deleteReviewItemSql, [itemId]);
+
+        await conn.commit();
+        res.status(200).json({ success: `Item deleted successfully!` });
+    } catch (error) {
+        await conn.rollback();
+        console.error('Error deleting Item:', error.stack);
+        res.status(500).send('Error deleting Item: ' + error.message);
+    } finally {
+        conn.release();
+    }
+};
+
 
 // Update Establishment
 const updateEstablishment = async (req, res) => {
@@ -246,6 +289,31 @@ const updateEstablishment = async (req, res) => {
         conn.release();
     }
 };
+
+// Update Food Item
+const updateFoodItem = async (req, res) => {
+    const { Item_id, Name, Food_type, Price, Description } = req.body;
+    const conn = await pool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+
+        // Update Food Item details
+        const updateEstablishmentSql = `UPDATE FOOD_ITEM SET Name = ?, Food_type = ?, Price = ?, Description = ? 
+        WHERE Item_id = ?`;
+        await conn.query(updateEstablishmentSql, [Name, Food_type, Price, Description, Item_id]);
+
+        await conn.commit();
+        res.status(200).json({ success: `Food Item updated successfully!` });
+    } catch (error) {
+        await conn.rollback();
+        console.error('Error updating Food Item:', error.stack);
+        res.status(500).send('Error updating Food Item: ' + error.message);
+    } finally {
+        conn.release();
+    }
+};
+
 
 
 
@@ -397,20 +465,7 @@ const getFoodItemsByEstablishmentId = async (req, res) => {
     }
 };
 
-const addFoodItemFromEstablishment = async (req, res) => {
-    const { establishmentId, itemName, description, price, category } = req.body;
 
-    const sql = `INSERT INTO FOOD_ITEM (Establishment_id, name, Description, Price, food_type) 
-                 VALUES (?, ?, ?, ?, ?)`;
-
-    try {
-        await pool.query(sql, [establishmentId, itemName, description, price, category]);
-        res.status(200).json({ success: "Food item added successfully!" });
-    } catch (error) {
-        console.error('Error adding food item:', error.stack);
-        res.status(500).send('Error adding food item: ' + error.message);
-    }
-};
 
 
 
@@ -693,7 +748,9 @@ export {
     getFoodEstablishmentReviews,
     addEstablishment,
     deleteEstablishment,
+    deleteFoodItem,
     updateEstablishment,
+    updateFoodItem,
     getEstablishment,
     searchEstablishmentByName,
     saveEstablishmentReview,

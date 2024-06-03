@@ -47,16 +47,16 @@ function FoodEstablishmentPage() {
     setShowModal(false);
   };
 
-  // TODO
   const handleSaveFoodItem = async (foodItem) => {
     try {
-      if (foodItem.Id) {
-        // await axios.put(
-        //   "http://localhost:3001/updateFoodItem",
-        //   { ...foodItem, establishmentId: id },
-        //   { withCredentials: true }
-        // );
-        // alert("Food item updated successfully!");
+      if (foodItem.Item_id) {
+        await axios.put(
+          "http://localhost:3001/updateFoodItem",
+          // { foodItem },
+          { ...foodItem, establishmentId: id },
+          { withCredentials: true }
+        );
+        alert("Food item updated successfully!");
       } else {
         await axios.post(
           "http://localhost:3001/addFoodItemFromEstablishment",
@@ -126,12 +126,20 @@ function FoodEstablishmentPage() {
           </button>
         </div>
 
-        <FoodItems data={foodItems} onDelete={handleDeleteFoodItem} onUpdate={handleUpdateFoodItem} />
+        <FoodItems
+          data={foodItems}
+          onDelete={handleDeleteFoodItem}
+          onUpdate={handleUpdateFoodItem}
+        />
 
       </div>
 
       <Modal show={showModal} onClose={handleCloseModal}>
-        <FoodItemForm estID={id} foodItem={editingItem} onSave={handleSaveFoodItem} />
+        <FoodItemForm
+          estID={id}
+          items={editingItem}
+          onSave={handleSaveFoodItem}
+        />
       </Modal>
     </>
   );
