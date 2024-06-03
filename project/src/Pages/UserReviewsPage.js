@@ -48,6 +48,25 @@ function UserReviewsPage() {
         }
     };
 
+    const fetchAllFoodEstablishmentReviewsFilter = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/getAllFoodEstablishmentReviewsFilter');
+            console.log(response.data);
+            setEstablishmentReviews(response.data);
+        } catch (error) {
+            console.error('Error fetching reviews within the last month:', error);
+        }
+    };
+
+    const fetchAllFoodItemReviewsFilter = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/getAllFoodItemReviewsFilter');
+            setItemReviews(response.data);
+        } catch (error) {
+            console.error('Error fetching reviews within the last month:', error);
+        }
+    };
+
     const fetchItemReviews = async () => {
       try {
           const response = await axios.get('http://localhost:3001/getFoodReviews');
@@ -220,26 +239,6 @@ const handleDeleteReviewItem = async (Item_id) => {
     
 }
 
-//   const handleDeleteReviewFoodItem = async (Establishment_id) => {
-//     try {
-//       console.log("Establishment id: ", Establishment_id);
-
-//       await axios.delete(
-//         `http://localhost:3001/deleteEstablishment`,
-//         {
-//           data: { Establishment_id },
-//           withCredentials: true,
-//         }
-//       );
-
-//       // alert("Establishment deleted successfully!");
-//       fetchEstablishments();
-//     } catch (error) {
-//       console.error('Error deleting establishment:', error);
-//       alert("Failed to delete establishment. Please try again.");
-//     }
-//   };
-
     return (
         <>
             <Navbar user={user} />
@@ -262,7 +261,7 @@ const handleDeleteReviewItem = async (Item_id) => {
                 <button className="add-new-establishment-button" onClick={fetchEstablishmentReviews}>
                     Refresh Establishment Reviews
                 </button>
-                <button className="add-new-establishment-button" onClick={fetchItemReviews}>
+                <button className="add-new-establishment-button" onClick={fetchAllFoodEstablishmentReviewsFilter}>
                     Filter by Food Establishment
                 </button>
                 <UserReviewsFoodEstablishmentTable 
@@ -282,8 +281,8 @@ const handleDeleteReviewItem = async (Item_id) => {
                 <button className="add-new-establishment-button" onClick={fetchItemReviews}>
                     Refresh Establishment Reviews
                 </button>
-                <button className="add-new-establishment-button" onClick={fetchItemReviews}>
-                    Filter by Food_Item
+                <button className="add-new-establishment-button" onClick={fetchAllFoodItemReviewsFilter}>
+                    Filter by Food Item
                 </button>
                 <UserReviewsFoodItemTable 
                 data={itemReviews}

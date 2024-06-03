@@ -29,7 +29,9 @@ import {
     updateFoodItemReview,
     deleteFoodItemReview,
     getFoodItemName,
-    getSpecificFoodItemReview
+    getSpecificFoodItemReview,
+    getAllFoodEstablishmentReviewsFilter,
+    getAllFoodItemReviewsFilter
 } from '../Controllers/controllers.js';
 
 const setUpRoutes = (app) => {
@@ -64,6 +66,8 @@ const setUpRoutes = (app) => {
     app.delete('/deleteFoodItemReview', deleteFoodItemReview);
     app.get('/getFoodItemName/:id', getFoodItemName);
     app.get('/getFoodItemReview/:id/:username', getSpecificFoodItemReview);
+    app.get('/getAllFoodEstablishmentReviewsFilter', getAllFoodEstablishmentReviewsFilter);
+    app.get('/getAllFoodItemReviewsFilter', getAllFoodItemReviewsFilter);
 }
 
 export default setUpRoutes;
