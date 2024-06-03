@@ -55,7 +55,7 @@ const UserReviewsFoodItemTable = ({ data, onDelete, onUpdate, showItemName }) =>
                                 <td>{ithRow.Rating}</td>
                                 <td> 
                                     <button onClick={() => handleDelete(ithRow.Item_id)}>Delete</button>
-                                    <button onClick={() => onUpdate(ithRow)}>Update</button>
+                                    <button onClick={() => handleUpdate(ithRow)}>Update</button>
                                     </td>
                             </tr>
                         ))}

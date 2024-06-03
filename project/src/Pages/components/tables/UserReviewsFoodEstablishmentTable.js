@@ -57,7 +57,7 @@ const UserReviewsFoodEstablishmentTable = ({ data, onDelete, onUpdate, showEstab
                                 <td>{ithRow.Rating}</td>
                                 <td>
                                     <button onClick={() => handleDelete(ithRow.Establishment_id)}>Delete</button>
-                                    <button onClick={() => onUpdate(ithRow)}>Update</button>
+                                    <button onClick={() => handleUpdate(ithRow)}>Update</button>
                                 </td>
                             </tr>
                         ))}

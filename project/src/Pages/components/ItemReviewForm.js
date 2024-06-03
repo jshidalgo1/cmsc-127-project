@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/EstablishmentReviewForm.css';
 
-const ItemFormReview = ({ establishment: foodItemReview, onSave }) => {
-    
+const ItemFormReview = ({item: foodItemReview, onSave }) => {
     const [estName, setEstName] = useState(foodItemReview ? foodItemReview.Name : '');
     const [estItemId, setItemId] = useState(foodItemReview ? foodItemReview.Item_id : null);
     const [review, setReview] = useState('');
@@ -21,21 +20,18 @@ const ItemFormReview = ({ establishment: foodItemReview, onSave }) => {
     };
 
     fetchFoodItem();
-    console.log(FoodItem);
 }, []);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
 
-        const updatedEstablishmentReview = {
+        const updatedItemReview = {
             Item_id: estItemId,
             Name: estName,
             Review: review,
             Rating: rating,
         };
-        // console.log(updatedEstablishmentReview);
-
-        onSave(updatedEstablishmentReview);
+        onSave(updatedItemReview);
     };
 
     const handleEstablishmentChange = (e) => {

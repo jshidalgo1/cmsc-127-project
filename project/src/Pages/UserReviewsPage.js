@@ -153,18 +153,20 @@ const handleDeleteReviewEstablishment = async (Establishment_id) => {
 // Add this function to handle the saving of the food item review
 const handleSaveItemReview = async (reviewData) => {
     reviewData.Username = user.Username;
+    console.log(reviewData);
     try {
         let response;
         if (editingItemReview) {
           console.log('Editing establishment review');
             // Updating an existing review
-            response = await axios.put(`http://localhost:3001/updateReview/${reviewData.Item_id}`, reviewData);
+            response = await axios.put(`http://localhost:3001/updateFoodItemReview/${reviewData.Item_id}`, reviewData);
             if (response.status === 200) {
                 // Update the review in the state
                 setItemReviews(itemReviews.map(review => 
                     review.Item_id === editingItemReview.Item_id ? response.data : review
                 ));
             }
+
         } else {
           console.log('adding new establishment review');
             // Saving a new review
@@ -177,16 +179,18 @@ const handleSaveItemReview = async (reviewData) => {
     } catch (error) {
         console.error('Error saving establishment review:', error);
     }
-
+    setShowItemModal(false);
     fetchItemReviews();
     fetchEstablishmentReviews();
+    
 };
 
 // Add this function to handle the updating of the food item review
 const handleUpdateReviewItem = async (itemReview) => {
     try {
+
         const response = await axios.get(`http://localhost:3001/getFoodItemReview/${itemReview.Item_id}/${itemReview.Username}`);
-      console.log('Fetched establishment data:', response.data); // Log the response data
+      console.log('Fetched Food Item data:', response.data); // Log the response data
       setEditingItemReview(response.data); // Assuming response.data contains the establishment details
       setShowItemModal(true);
     } catch (error) {

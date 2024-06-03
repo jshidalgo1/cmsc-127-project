@@ -652,7 +652,6 @@ const updateEstablishmentReview = async (req, res) => {
 
 const getSpecificFoodEstablishmentReview = async (req, res) => {
     const { id, username } = req.params;
-    console.log(id, username)
     const sql = `SELECT USER_REVIEWS_FOOD_ESTABLISHMENT.*, FOOD_ESTABLISHMENT.name 
     FROM USER_REVIEWS_FOOD_ESTABLISHMENT 
     INNER JOIN FOOD_ESTABLISHMENT 
@@ -736,7 +735,6 @@ const getAllFoodItemReviewsWithinMonth = async (req, res) => {
 
 const saveFoodItemReview = async (req, res) => {
     const { Username, Item_id, Review, Rating } = req.body;
-    console.log(req.body);
     const sql = `INSERT INTO USER_REVIEWS_FOOD_ITEM (Username, Item_id, review, Rating, Review_date_time) VALUES (?, ?, ?, ?, NOW())`;
     pool.query(sql, [Username, Item_id, Review, Rating])
         .then((result) => {
@@ -751,7 +749,7 @@ const saveFoodItemReview = async (req, res) => {
 const updateFoodItemReview = async (req, res) => {
     const { Item_id, Review, Rating } = req.body;
     console.log(req.body);
-    const sql = `UPDATE USER_REVIEWS_FOOD_ESTABLISHMENT SET Review = ?, Rating = ?, review_date_time = NOW() WHERE Establishment_id = ?`;
+    const sql = `UPDATE USER_REVIEWS_FOOD_ITEM SET Review = ?, Rating = ?, review_date_time = NOW() WHERE Item_id = ?`;
     pool.query(sql, [Review, Rating, Item_id])
 
         .then((result) => {
@@ -759,7 +757,7 @@ const updateFoodItemReview = async (req, res) => {
         })
         .catch((error) => {
             console.error('Error updating establishment review:', error.stack);
-            res.status(500).send('Error updating establishment review');
+            res.status(500).send('Error updating Food Item review');
         });
 }
 
@@ -782,7 +780,6 @@ const getFoodItemName = async (req, res) => {
         const reviewsQuery =
             'SELECT name FROM food_item WHERE item_id = ?';
         const [rows] = await pool.query(reviewsQuery, [id]);
-        console.log(rows);
         res.status(200).json(rows);
     } catch (error) {
         console.error('Error fetching establishment name:', error.stack);
@@ -791,7 +788,20 @@ const getFoodItemName = async (req, res) => {
 }
 
 const getSpecificFoodItemReview = async (req, res) => {
-    
+    const { id, username } = req.params;
+    const sql = `SELECT USER_REVIEWS_FOOD_ITEM.*, FOOD_ITEM.name 
+    FROM USER_REVIEWS_FOOD_ITEM 
+    INNER JOIN FOOD_ITEM 
+    ON USER_REVIEWS_FOOD_ITEM.ITEM_id = FOOD_ITEM.ITEM_id 
+    WHERE USER_REVIEWS_FOOD_ITEM.Item_id = ? AND USER_REVIEWS_FOOD_ITEM.Username = ?`;
+    try {
+        const [review] = await pool.query(sql, [id, username]);
+
+        res.status(200).json(review);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query: ' + error.message);
+    }
 }
 
 
