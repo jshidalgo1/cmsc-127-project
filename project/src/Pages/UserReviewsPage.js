@@ -17,7 +17,7 @@ function UserReviewsPage() {
     const [editingItemReview, setEditingItemReview] = useState(null);
     const [establishmentreviewsWithinMonthFetched, setestablishmentReviewsWithinMonthFetched] = useState(false);
     const [establishmentItemWithinMonthFetched, setestablishmentItemWithinMonthFetched] = useState(false);
-    
+    const [ShowEstablishmentReviews, setShowEstablishmentReviews] = useState(false);
     const fetchEstablishmentReviews = async () => {
             
         try {
@@ -256,8 +256,14 @@ const handleDeleteReviewItem = async (Item_id) => {
                 <button className="add-new-establishment-button" onClick={handleAddEstablishmentReviewClick}>
                     <span className="plus-sign">+</span> Add New Food Establishment Review
                 </button>
-                <button onClick={fetchAllFoodEstablishmentReviewsWithinMonth}>
+                <button className="add-new-establishment-button" onClick={fetchAllFoodEstablishmentReviewsWithinMonth}>
                     Get Food Establishment Reviews Within Last Month
+                </button>
+                <button className="add-new-establishment-button" onClick={fetchEstablishmentReviews}>
+                    Refresh Establishment Reviews
+                </button>
+                <button className="add-new-establishment-button" onClick={fetchItemReviews}>
+                    Filter by Food Establishment
                 </button>
                 <UserReviewsFoodEstablishmentTable 
                 data={establishmentReviews} 
@@ -270,8 +276,14 @@ const handleDeleteReviewItem = async (Item_id) => {
                 <button className="add-new-establishment-button" onClick={handleAddItemReviewClick}>
                     <span className="plus-sign">+</span> Add New Food Item Review
                 </button>
-                <button onClick={fetchAllFoodItemReviewsWithinMonth}>
+                <button className = "add-new-establishment-button" onClick={fetchAllFoodItemReviewsWithinMonth}>
                     Get Food Item Reviews Within Last Month
+                </button>
+                <button className="add-new-establishment-button" onClick={fetchItemReviews}>
+                    Refresh Establishment Reviews
+                </button>
+                <button className="add-new-establishment-button" onClick={fetchItemReviews}>
+                    Filter by Food_Item
                 </button>
                 <UserReviewsFoodItemTable 
                 data={itemReviews}
