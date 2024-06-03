@@ -48,7 +48,7 @@ const FoodItems = ({ data, onDelete, onUpdate }) => {
                                         {" "}
                                         <button className="action-button" onClick={() => handleUpdate(item)}>Update</button>
                                         {" "}
-                                        <button className="action-button" onClick={() => handleDelete(item.Establishment_id)}>Delete</button>
+                                        <button className="action-button" onClick={() => handleDelete(item.Item_id)}>Delete</button>
                                     </div>
                                 </td>
                             </tr>
