@@ -332,19 +332,25 @@ const getEstablishment = async (req, res) => {
     try {
         const establishmentQuery = `
             SELECT 
-                FOOD_ESTABLISHMENT.Establishment_id, 
+                fe.Establishment_id, 
                 Name, 
                 Type, 
                 Description, 
                 Address, 
+                ROUND(COALESCE(AVG(rfe.rating), 0), 2) AS AverageRating,
                 COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
                 COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
             FROM 
-                FOOD_ESTABLISHMENT 
-                LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
-                LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_CONTACT_NO.Establishment_id
+                FOOD_ESTABLISHMENT fe
+                LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT rfe ON fe.Establishment_id = rfe.Establishment_id
+                LEFT JOIN FOOD_ESTABLISHMENT_LINKS fel ON fe.Establishment_id = fel.Establishment_id
+                LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO feco ON fe.Establishment_id = feco.Establishment_id
             WHERE 
-                FOOD_ESTABLISHMENT.Establishment_id = ?`;
+                fe.Establishment_id = ?
+            GROUP BY 
+                fe.Establishment_id
+            `;
+
 
         // SELECT * FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
         const [establishmentResult] = await pool.query(establishmentQuery, [id]);
@@ -361,7 +367,8 @@ const getEstablishment = async (req, res) => {
             Address: establishmentResult.Address,
             Type: establishmentResult.Type,
             links: establishmentResult.links ? establishmentResult.links.split(',') : [],
-            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
+            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : [],
+            AverageRating: establishmentResult.AverageRating
         };
 
         // console.log('Establishment Query Result:', establishment); // Log the links query result
@@ -377,21 +384,25 @@ const getEstablishment = async (req, res) => {
 const searchEstablishmentByName = async (req, res) => {
     const { name } = req.query;
     const sql = `
-        SELECT 
-            FOOD_ESTABLISHMENT.Establishment_id, 
+            SELECT 
+            fe.Establishment_id, 
             Name, 
             Type, 
             Description, 
             Address, 
+            ROUND(COALESCE(AVG(rfe.rating), 0), 2) AS AverageRating,
             COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
             COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
         FROM 
-            FOOD_ESTABLISHMENT 
-            LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
-            LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_CONTACT_NO.Establishment_id
-        WHERE Name LIKE ?
-        GROUP BY Establishment_id
-    `;
+            FOOD_ESTABLISHMENT fe
+            LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT rfe ON fe.Establishment_id = rfe.Establishment_id
+            LEFT JOIN FOOD_ESTABLISHMENT_LINKS fel ON fe.Establishment_id = fel.Establishment_id
+            LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO feco ON fe.Establishment_id = feco.Establishment_id
+        WHERE 
+            Name like ?
+        GROUP BY 
+            fe.Establishment_id
+        `;
 
     const searchPattern = `%${name}%`;
 
@@ -405,7 +416,8 @@ const searchEstablishmentByName = async (req, res) => {
             Address: establishmentResult.Address,
             Type: establishmentResult.Type,
             links: establishmentResult.links ? establishmentResult.links.split(',') : [],
-            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
+            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : [],
+            AverageRating: establishmentResult.AverageRating
         }));
 
         console.log('searchEstablishmentByName Result:', establishments);

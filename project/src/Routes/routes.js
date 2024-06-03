@@ -24,7 +24,7 @@ import {
     getAllFoodEstablishmentReviewsWithinMonth,
     getAllFoodItemReviewsWithinMonth,
     getSpecificFoodEstablishmentReview,
-    updateEstablishmentReview, 
+    updateEstablishmentReview,
     saveFoodItemReview,
     updateFoodItemReview,
     deleteFoodItemReview,
@@ -59,7 +59,7 @@ const setUpRoutes = (app) => {
     app.post('/addFoodItemFromEstablishment', addFoodItemFromEstablishment);
     app.get('/getAllFoodEstablishmentReviewsWithinMonth', getAllFoodEstablishmentReviewsWithinMonth);
     app.get('/getAllFoodItemReviewsWithinMonth', getAllFoodItemReviewsWithinMonth);
-    app. post('/saveFoodItemReview', saveFoodItemReview);
+    app.post('/saveFoodItemReview', saveFoodItemReview);
     app.put('/updateFoodItemReview/:id', updateFoodItemReview);
     app.delete('/deleteFoodItemReview', deleteFoodItemReview);
     app.get('/getFoodItemName/:id', getFoodItemName);
