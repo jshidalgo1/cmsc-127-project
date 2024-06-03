@@ -232,11 +232,13 @@ const deleteFoodItem = async (req, res) => {
         await conn.beginTransaction();
 
         // Delete related entries in food_item table
+        const deleteReviewItemSql = `DELETE FROM USER_REVIEWS_FOOD_ITEM WHERE Item_id = ?`;
+        await conn.query(deleteReviewItemSql, [itemId]);
+        
         const deleteItemsSql = `DELETE FROM FOOD_ITEM WHERE Item_id = ?`;
         await conn.query(deleteItemsSql, [itemId]);
 
-        const deleteReviewItemSql = `DELETE FROM USER_REVIEWS_FOOD_ITEM WHERE Item_id = ?`;
-        await conn.query(deleteReviewItemSql, [itemId]);
+        
 
         await conn.commit();
         res.status(200).json({ success: `Item deleted successfully!` });

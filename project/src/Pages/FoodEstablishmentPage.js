@@ -74,14 +74,14 @@ function FoodEstablishmentPage() {
           { ...foodItem, establishmentId: id },
           { withCredentials: true }
         );
-        alert("Food item updated successfully!");
+        // alert("Food item updated successfully!");
       } else {
         await axios.post(
           "http://localhost:3001/addFoodItemFromEstablishment",
           { ...foodItem, establishmentId: id },
           { withCredentials: true }
         );
-        alert("Food item added successfully!");
+        // alert("Food item added successfully!");
       }
       setShowModal(false);
       fetchEstablishmentAndItems();
