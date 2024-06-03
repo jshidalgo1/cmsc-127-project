@@ -25,6 +25,7 @@ const FoodEstablishments = ({ data, onDelete, onUpdate, noAction }) => {
                             <th>Address</th>
                             <th>Links</th>
                             <th>Contact Number</th>
+                            <th>Average Rating</th>
                             {noAction === 1 ? null : <th>Action</th>}
                         </tr>
                     </thead>
@@ -36,12 +37,14 @@ const FoodEstablishments = ({ data, onDelete, onUpdate, noAction }) => {
                                 <td>{est.Type}</td>
                                 <td>{est.Description}</td>
                                 <td>{est.Address}</td>
+                                {/* Display average rating */}
                                 <td>
                                     <FoodEstablishmentLinks data={est.links} />
                                 </td>
                                 <td>
                                     <FoodEstablishmentContactNo data={est.Contact_no} />
                                 </td>
+                                <td>{est.AverageRating}</td>
                                 {!noAction && (
                                     <td>
                                         <div className="action-buttons">

@@ -36,7 +36,16 @@ const authenticateUser = async (req, res) => {
 // }
 
 const getFoodEstablishments = async (req, res) => {
-    const establishmentsSql = 'SELECT * FROM FOOD_ESTABLISHMENT';
+    const establishmentsSql = `
+        SELECT 
+            FE.*, 
+            ROUND(COALESCE(AVG(R.rating), 0), 2) AS AverageRating  
+        FROM 
+            FOOD_ESTABLISHMENT FE
+            LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT R ON FE.Establishment_id = R.Establishment_id
+        GROUP BY 
+            FE.Establishment_id
+    `;
     const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
     const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
 
@@ -323,19 +332,25 @@ const getEstablishment = async (req, res) => {
     try {
         const establishmentQuery = `
             SELECT 
-                FOOD_ESTABLISHMENT.Establishment_id, 
+                fe.Establishment_id, 
                 Name, 
                 Type, 
                 Description, 
                 Address, 
+                ROUND(COALESCE(AVG(rfe.rating), 0), 2) AS AverageRating,
                 COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
                 COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
             FROM 
-                FOOD_ESTABLISHMENT 
-                LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
-                LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_CONTACT_NO.Establishment_id
+                FOOD_ESTABLISHMENT fe
+                LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT rfe ON fe.Establishment_id = rfe.Establishment_id
+                LEFT JOIN FOOD_ESTABLISHMENT_LINKS fel ON fe.Establishment_id = fel.Establishment_id
+                LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO feco ON fe.Establishment_id = feco.Establishment_id
             WHERE 
-                FOOD_ESTABLISHMENT.Establishment_id = ?`;
+                fe.Establishment_id = ?
+            GROUP BY 
+                fe.Establishment_id
+            `;
+
 
         // SELECT * FROM FOOD_ESTABLISHMENT WHERE Establishment_id = ?`;
         const [establishmentResult] = await pool.query(establishmentQuery, [id]);
@@ -352,7 +367,8 @@ const getEstablishment = async (req, res) => {
             Address: establishmentResult.Address,
             Type: establishmentResult.Type,
             links: establishmentResult.links ? establishmentResult.links.split(',') : [],
-            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
+            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : [],
+            AverageRating: establishmentResult.AverageRating
         };
 
         // console.log('Establishment Query Result:', establishment); // Log the links query result
@@ -368,21 +384,25 @@ const getEstablishment = async (req, res) => {
 const searchEstablishmentByName = async (req, res) => {
     const { name } = req.query;
     const sql = `
-        SELECT 
-            FOOD_ESTABLISHMENT.Establishment_id, 
+            SELECT 
+            fe.Establishment_id, 
             Name, 
             Type, 
             Description, 
             Address, 
+            ROUND(COALESCE(AVG(rfe.rating), 0), 2) AS AverageRating,
             COALESCE(GROUP_CONCAT(DISTINCT links), '') AS links, 
             COALESCE(GROUP_CONCAT(DISTINCT Contact_no), '') AS Contact_no
         FROM 
-            FOOD_ESTABLISHMENT 
-            LEFT JOIN FOOD_ESTABLISHMENT_LINKS ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_LINKS.Establishment_id
-            LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO ON FOOD_ESTABLISHMENT.Establishment_id = FOOD_ESTABLISHMENT_CONTACT_NO.Establishment_id
-        WHERE Name LIKE ?
-        GROUP BY Establishment_id
-    `;
+            FOOD_ESTABLISHMENT fe
+            LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT rfe ON fe.Establishment_id = rfe.Establishment_id
+            LEFT JOIN FOOD_ESTABLISHMENT_LINKS fel ON fe.Establishment_id = fel.Establishment_id
+            LEFT JOIN FOOD_ESTABLISHMENT_CONTACT_NO feco ON fe.Establishment_id = feco.Establishment_id
+        WHERE 
+            Name like ?
+        GROUP BY 
+            fe.Establishment_id
+        `;
 
     const searchPattern = `%${name}%`;
 
@@ -396,7 +416,8 @@ const searchEstablishmentByName = async (req, res) => {
             Address: establishmentResult.Address,
             Type: establishmentResult.Type,
             links: establishmentResult.links ? establishmentResult.links.split(',') : [],
-            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : []
+            Contact_no: establishmentResult.Contact_no ? establishmentResult.Contact_no.split(',') : [],
+            AverageRating: establishmentResult.AverageRating
         }));
 
         console.log('searchEstablishmentByName Result:', establishments);
@@ -432,6 +453,95 @@ const searchFoodItemByName = async (req, res) => {
         res.status(500).send('Error searching food Items by name');
     }
 };
+
+
+// const getFoodEstablishments = async (req, res) => {
+//     const establishmentsSql = `
+//         SELECT 
+//             FE.*, 
+//             ROUND(COALESCE(AVG(R.rating), 0), 2) AS AverageRating  
+//         FROM 
+//             FOOD_ESTABLISHMENT FE
+//             LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT R ON FE.Establishment_id = R.Establishment_id
+//         GROUP BY 
+//             FE.Establishment_id
+//     `;
+//     const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
+//     const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
+
+//     try {
+//         const establishments = await pool.query(establishmentsSql);
+//         const links = await pool.query(linksSql);
+//         const contactNos = await pool.query(contactNosSql);
+
+//         const combinedData = establishments.map(est => {
+//             const estLinks = links
+//                 .filter(link => link.Establishment_id === est.Establishment_id)
+//                 .map(link => link.links);
+//             const estContactNos = contactNos
+//                 .filter(contactNo => contactNo.Establishment_id === est.Establishment_id)
+//                 .map(contactNo => contactNo.Contact_no);
+
+//             return {
+//                 ...est,
+//                 links: estLinks,
+//                 Contact_no: estContactNos
+//             };
+//         });
+
+//         res.status(200).json(combinedData);
+//     } catch (error) {
+//         console.error('Error executing query', error.stack);
+//         res.status(500).send('Error executing query');
+//     }
+// }
+
+
+// Get High Rating Establishment
+const getHighRatingEstablishment = async (req, res) => {
+    const establishmentsSql = `
+        SELECT 
+            FE.*, 
+            ROUND(COALESCE(AVG(R.rating), 0), 2) AS AverageRating  
+        FROM 
+            FOOD_ESTABLISHMENT FE
+            LEFT JOIN USER_REVIEWS_FOOD_ESTABLISHMENT R ON FE.Establishment_id = R.Establishment_id
+        GROUP BY 
+            FE.Establishment_id
+        HAVING 
+            AverageRating >= 4;
+        `;
+
+    const linksSql = 'SELECT * FROM FOOD_ESTABLISHMENT_LINKs';
+    const contactNosSql = 'SELECT * FROM FOOD_ESTABLISHMENT_CONTACT_NO';
+
+    try {
+        const establishments = await pool.query(establishmentsSql);
+        const links = await pool.query(linksSql);
+        const contactNos = await pool.query(contactNosSql);
+
+        const combinedData = establishments.map(est => {
+            const estLinks = links
+                .filter(link => link.Establishment_id === est.Establishment_id)
+                .map(link => link.links);
+            const estContactNos = contactNos
+                .filter(contactNo => contactNo.Establishment_id === est.Establishment_id)
+                .map(contactNo => contactNo.Contact_no);
+
+            return {
+                ...est,
+                links: estLinks,
+                Contact_no: estContactNos
+            };
+        });
+
+        res.status(200).json(combinedData);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error executing query');
+    }
+};
+
 
 
 const saveEstablishmentReview = async (req, res) => {
@@ -475,7 +585,7 @@ const getEstablishmentById = async (req, res) => {
     }
 };
 
-
+// Get Food Items By EstablishmentId
 const getFoodItemsByEstablishmentId = async (req, res) => {
     const { establishmentId } = req.params;
     console.log('getFoodItemsByEstablishmentId called with establishmentId:', establishmentId);
@@ -485,6 +595,40 @@ const getFoodItemsByEstablishmentId = async (req, res) => {
     try {
         const result = await pool.query(sql, [establishmentId]);
         console.log('getFoodItemsByEstablishmentId result:', result);
+        res.status(200).send(result);
+    } catch (error) {
+        console.error('Error fetching food items by establishment ID:', error.stack);
+        res.status(500).send('Error fetching food items by establishment ID: ' + error.message);
+    }
+};
+
+// Get Sorted By Price ASC Food Items By Establishment Id
+const getSortedByPriceASCFoodItemsByEstablishmentId = async (req, res) => {
+    const { establishmentId } = req.params;
+    console.log('getFoodItemsByEstablishmentId called with establishmentId:', establishmentId);
+
+    const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ? ORDER BY Price`;
+
+    try {
+        const result = await pool.query(sql, [establishmentId]);
+        console.log('getSortedByPriceFoodItemsByEstablishmentId result: Sorted', result);
+        res.status(200).send(result);
+    } catch (error) {
+        console.error('Error fetching food items by establishment ID:', error.stack);
+        res.status(500).send('Error fetching food items by establishment ID: ' + error.message);
+    }
+};
+
+// Get Sorted By Price DESC Food Items By Establishment Id
+const getSortedByPriceDESCFoodItemsByEstablishmentId = async (req, res) => {
+    const { establishmentId } = req.params;
+    console.log('getFoodItemsByEstablishmentId called with establishmentId:', establishmentId);
+
+    const sql = `SELECT * FROM FOOD_ITEM WHERE Establishment_id = ? ORDER BY Price DESC`;
+
+    try {
+        const result = await pool.query(sql, [establishmentId]);
+        console.log('getSortedByPriceFoodItemsByEstablishmentId result: Sorted', result);
         res.status(200).send(result);
     } catch (error) {
         console.error('Error fetching food items by establishment ID:', error.stack);
@@ -847,11 +991,14 @@ export {
     getEstablishment,
     searchEstablishmentByName,
     searchFoodItemByName,
+    getHighRatingEstablishment,
     saveEstablishmentReview,
     getFoodEstablishmentName,
     addFoodItemFromEstablishment,
     deleteEstablishmentReviews,
     getFoodItemsByEstablishmentId,
+    getSortedByPriceASCFoodItemsByEstablishmentId,
+    getSortedByPriceDESCFoodItemsByEstablishmentId,
     getAllFoodItemsOrderedByEstablishmentName,
     getAllFoodItemsOrderedByEstablishmentNameAndFoodType,
     getAllFoodItemsOrderedByEstablishmentNameAndPrice,

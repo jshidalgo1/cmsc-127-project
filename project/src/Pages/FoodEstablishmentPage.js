@@ -15,6 +15,8 @@ function FoodEstablishmentPage() {
   const [establishment, setEstablishment] = useState([]);
   const [foodItems, setFoodItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortByPrice, setSortByPrice] = useState(0);
+
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
@@ -28,6 +30,14 @@ function FoodEstablishmentPage() {
       if (searchQuery) {
         foodItemsResponse = await axios.get(
           `http://localhost:3001/searchFoodItemByName?name=${searchQuery}&id=${id}`
+        );
+      } else if (sortByPrice === 1) {
+        foodItemsResponse = await axios.get(
+          `http://localhost:3001/getSortedByPriceASCFoodItemsByEstablishmentId/${id}`
+        );
+      } else if (sortByPrice === 2) {
+        foodItemsResponse = await axios.get(
+          `http://localhost:3001/getSortedByPriceDESCFoodItemsByEstablishmentId/${id}`
         );
       } else {
         foodItemsResponse = await axios.get(`http://localhost:3001/getFoodItemsByEstablishmentId/${id}`);
@@ -44,7 +54,7 @@ function FoodEstablishmentPage() {
 
   useEffect(() => {
     fetchEstablishmentAndItems();
-  }, [id, searchQuery]);
+  }, [id, searchQuery, sortByPrice]);
 
   const handleAddFoodItemClick = () => {
     setEditingItem(null);
@@ -102,6 +112,20 @@ function FoodEstablishmentPage() {
     setShowModal(true);
   };
 
+  const handleSortByPrice = () => {
+    if (sortByPrice === 0) {
+      setSortByPrice(1);
+      setSearchQuery('');
+    } else if (sortByPrice === 1) {
+      setSortByPrice(2);
+      setSearchQuery('');
+    }
+    else {
+      setSortByPrice(0);
+      setSearchQuery('');
+    }
+  };
+
   return (
     <>
       <Navbar user={user} />
@@ -120,6 +144,7 @@ function FoodEstablishmentPage() {
         <div className="inventory-header">
           <div className="left-inventory-header">
             <h2>{establishment.length > 0 ? `${establishment[0].Name}'s Food Items` : "Food Items"}</h2>
+
             <div className="search-container">
               <input
                 type="text"
@@ -128,6 +153,11 @@ function FoodEstablishmentPage() {
                 placeholder="Search by name..."
               />
             </div>
+
+            <button className="view-button" onClick={handleSortByPrice}>
+              {sortByPrice === 0 ? "Sort By Price ↑" : sortByPrice === 1 ? "Sort By Price ↓" : "Sort By ID"}
+            </button>
+
           </div>
           <button className="add-new-establishment-button" onClick={handleAddFoodItemClick}>
             <span className="plus-sign">+</span> Add New Food Item
